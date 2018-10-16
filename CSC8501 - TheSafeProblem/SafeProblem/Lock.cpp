@@ -88,5 +88,7 @@ int main() {
 	Vec<Dial, 4> lock1(Dial(3), Dial(4), Dial(9), Dial(7));
 	//Vec<Lock, 5> safe;
 
+	lock1.getAt(0) + 10;
+
 	return 0;
 }

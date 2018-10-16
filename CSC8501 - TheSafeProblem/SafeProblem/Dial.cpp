@@ -26,7 +26,7 @@ Dial Dial::operator+(const int & rhs)
 		else
 			entry++;
 
-		//std::cout << entry << std::endl;
+		std::cout << entry << std::endl;
 	}
 
 	return Dial(entry);
