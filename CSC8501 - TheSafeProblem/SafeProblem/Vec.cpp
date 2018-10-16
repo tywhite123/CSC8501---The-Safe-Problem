@@ -1,12 +1,35 @@
-#include "Vec.h"
+//#include "Vec.h"
+
+#pragma once
+
+template <typename T, int N>
+
+class Vec
+{
+public:
+	Vec(T t, ...);
+	~Vec();
 
 
 
-Vec::Vec()
+private:
+	T store[N];
+};
+
+
+
+
+//template <typename T, int N>
+//Vec<T,N>::Vec()
+//{
+//}
+
+template<typename T, int N>
+Vec<T, N>::Vec(T t, ...)
 {
 }
 
-
-Vec::~Vec()
+template <typename T, int N>
+Vec<T,N>::~Vec()
 {
 }

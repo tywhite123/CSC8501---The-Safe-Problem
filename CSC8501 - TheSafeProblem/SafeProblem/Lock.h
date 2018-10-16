@@ -5,6 +5,7 @@
 class Lock
 {
 public:
+	Lock();
 	Lock(int a, int b, int c, int d);
 	~Lock();
 

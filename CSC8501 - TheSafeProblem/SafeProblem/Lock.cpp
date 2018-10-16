@@ -1,11 +1,15 @@
 #include "Lock.h"
-
+#include"Vec.cpp"
 
 
 //Lock::Lock()
 //{
 //}
 
+
+Lock::Lock()
+{
+}
 
 Lock::Lock(int a, int b, int c, int d)
 {
@@ -80,6 +84,9 @@ int main() {
 		std::cout << CN[i].getEntry();
 	std::cout << std::endl;
 	
+
+	Vec<Dial, 4> lock1(Dial(3), Dial(4), Dial(9), Dial(7));
+	//Vec<Lock, 5> safe;
 
 	return 0;
 }
