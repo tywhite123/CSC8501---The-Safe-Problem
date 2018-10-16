@@ -111,6 +111,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Dial.h" />
+    <ClInclude Include="Lock.h" />
+    <ClInclude Include="Safe.h" />
+    <ClInclude Include="Vec.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Dial.cpp" />
+    <ClCompile Include="Lock.cpp" />
+    <ClCompile Include="Safe.cpp" />
+    <ClCompile Include="Vec.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
