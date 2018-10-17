@@ -9,7 +9,6 @@ public:
 
 	Dial operator+(const int& rhs);
 	Dial operator-(const int& rhs);
-
 	int operator=(Dial& rhs);
 
 	int getEntry() { return entry; }

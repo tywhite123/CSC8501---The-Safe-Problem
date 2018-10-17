@@ -1,4 +1,5 @@
 #include "Dial.h"
+#include "Vec.cpp"
 #pragma once
 
 
@@ -10,7 +11,7 @@ public:
 	~Lock();
 
 
-	Dial getAt(int i) { return dials[i]; }
+	Dial getAt(int i) { return lock.getAt(i); }
 
 
 
@@ -18,7 +19,9 @@ public:
 
 
 private:
-	Dial dials[4];
+	//Dial dials[4];
+	Vec<Dial, 4> lock;
+	
 	
 
 };

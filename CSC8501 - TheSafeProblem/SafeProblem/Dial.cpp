@@ -19,32 +19,38 @@ Dial::~Dial()
 
 Dial Dial::operator+(const int & rhs)
 {
-	
-	for (int i = 1; i <= rhs; ++i) {
-		if (entry >= 9)
-			entry = 0;
-		else
-			entry++;
+	int j = entry;
+	if (rhs < 0) {
+		return Dial(operator-(-rhs));
 
-		std::cout << entry << std::endl;
+	}
+	else {
+		for (int i = 1; i <= rhs; ++i) {
+			if (j >= 9)
+				j = 0;
+			else
+				j++;
+
+			//std::cout << entry << std::endl;
+		}
 	}
 
-	return Dial(entry);
+	return Dial(j);
 }
 
 Dial Dial::operator-(const int & rhs)
 {
-	
+	int j = entry;
 	for (int i = 1; i <= rhs; ++i) {
-		if (entry <= 0)
-			entry = 9;
+		if (j <= 0)
+			j = 9;
 		else
-			entry--;
+			j--;
 
 		//std::cout << entry << std::endl;
 	}
 
-	return Dial(entry);
+	return Dial(j);
 }
 
 int Dial::operator=(Dial & rhs)
