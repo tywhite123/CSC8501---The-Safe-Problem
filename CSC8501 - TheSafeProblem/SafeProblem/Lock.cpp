@@ -60,7 +60,10 @@ int main() {
 	//	std::cout << d[i].getEntry();
 	//std::cout << std::endl;
 
-	for (int i = 0; i < 10; ++i) {
+	int noOfS;
+	std::cin >> noOfS;
+
+	for (int i = 0; i < noOfS; ++i) {
 		std::cout << "Solution " << i+1 << std::endl << std::endl;
 
 		int a, b, c, d;
@@ -84,7 +87,32 @@ int main() {
 		uhfC = rand() % 10;
 		uhfD = rand() % 10;
 
-		std::cout << "UHF:\t" << uhfA << uhfB << uhfC << uhfD << std::endl;
+		if (rand() % 2 == 0)
+			uhfA = -uhfA;
+		if (rand() % 2 == 0)
+			uhfB = -uhfB;
+		if (rand() % 2 == 0)
+			uhfC = -uhfC;
+		if (rand() % 2 == 0)
+			uhfD = -uhfD;
+
+		std::cout << "UHF:\t" << uhfA << ", " << uhfB << ", " << uhfC << ", " << uhfD << std::endl;
+
+		   
+		lhfA = rand() % 19 - 9;
+		lhfB = rand() % 19 - 9;
+		lhfC = rand() % 19 - 9;
+		lhfD = rand() % 19 - 9;
+
+		std::cout << "LHF:\t" << lhfA << ", " << lhfB << ", " << lhfC << ", " << lhfD << std::endl;
+
+		phfA = rand() % 19 - 9;
+		phfB = rand() % 19 - 9;
+		phfC = rand() % 19 - 9;
+		phfD = rand() % 19 - 9;
+
+		std::cout << "PHF:\t" << phfA << ", " << phfB << ", " << phfC << ", " << phfD << std::endl;
+
 
 		/*std::cout << "Please Enter Hashing: " << std::endl;
 		std::cin >> uhfA >> uhfB >> uhfC >> uhfD;
@@ -110,6 +138,29 @@ int main() {
 		std::cout << std::endl;
 
 
+		LN[0] = CN[0] + lhfA;
+		LN[1] = CN[1] + lhfB;
+		LN[2] = CN[2] + lhfC;
+		LN[3] = CN[3] + lhfD;
+
+		std::cout << "LN:\t";
+		for (int i = 0; i < 4; i++)
+		 std::cout << LN[i].getEntry();
+		std::cout << std::endl;
+
+
+
+		HN[0] = LN[0] + phfA;
+		HN[1] = LN[1] + phfB;
+		HN[2] = LN[2] + phfC;
+		HN[3] = LN[3] + phfD;
+
+		std::cout << "HN:\t";
+		for (int i = 0; i < 4; i++)
+		 std::cout << HN[i].getEntry();
+		std::cout << std::endl;
+
+
 
 		//How the check with work
 		for (int i = 0; i < 3; ++i) {
@@ -123,6 +174,11 @@ int main() {
 
 		std::cout << "\n----------------------------------------------------------------------------\n\n";
 	}
+
+	
+	/*for (int i = 0; i < 19; ++i) {
+		std::cout << i - 9 << " ";
+	}*/
 
 	 //LN[0] = CN[0] + lhfA;
 	 //LN[1] = CN[1] + lhfB;
