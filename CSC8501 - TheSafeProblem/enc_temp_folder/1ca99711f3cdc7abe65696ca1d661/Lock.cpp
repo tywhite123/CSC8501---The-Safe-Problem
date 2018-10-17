@@ -161,13 +161,13 @@ int main() {
 		std::cout << std::endl;
 
 
+
 		//How the check with work
 		for (int i = 0; i < 3; ++i) {
 			for (int j = i + 1; j < 4; ++j) {
 				std::cout << "Comparing: " << CN[i].getEntry() << " & " << CN[j].getEntry() << std::endl;
 				if (CN[i].getEntry() == CN[j].getEntry()) {
 					std::cout << "They are the same value, so invalid CN" << std::endl;
-					
 				}
 			}
 		}
