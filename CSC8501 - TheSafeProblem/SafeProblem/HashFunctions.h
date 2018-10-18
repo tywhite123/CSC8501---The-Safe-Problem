@@ -1,10 +1,11 @@
+
 #include"Lock.h"
-#include<cstdlib>
 #pragma once
 class HashFunctions
 {
 public:
 	HashFunctions();
+	HashFunctions(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4]);
 	~HashFunctions();
 
 	void hashRoot(Vec<Dial, 4>& Root);

@@ -11,8 +11,8 @@ public:
 	~Lock();
 
 
-	Dial getAt(int i) { return lock.getAt(i); }
-	Vec<Dial, 4> getLock() { return lock; }
+	Dial getAt(int i) { return dials.getAt(i); }
+	Vec<Dial, 4> getLock() { return dials; }
 
 
 
@@ -21,7 +21,7 @@ public:
 
 private:
 	//Dial dials[4];
-	Vec<Dial, 4> lock;
+	Vec<Dial, 4> dials;
 	
 	
 

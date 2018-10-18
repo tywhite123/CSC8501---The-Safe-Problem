@@ -38,6 +38,18 @@ HashFunctions::HashFunctions()
 
 }
 
+HashFunctions::HashFunctions(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4])
+{
+	for(int i = 0; i < 4; ++i)
+	{
+		this->UHF.insert(UHF[i]);
+		this->LHF.insert(LHF[i]);
+		this->PHF.insert(PHF[i]);
+	}
+}
+
+
+
 
 HashFunctions::~HashFunctions()
 {

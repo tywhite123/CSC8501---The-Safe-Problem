@@ -1,5 +1,5 @@
-#include "Lock.h"
 
+#include "Lock.h"
 
 
 //Lock::Lock()
@@ -18,10 +18,10 @@ Lock::Lock(int a, int b, int c, int d)
 	//dials[2] = Dial(c);
 	//dials[3] = Dial(d);
 
-	lock.insert(Dial(a));
-	lock.insert(Dial(b));
-	lock.insert(Dial(c));
-	lock.insert(Dial(d));
+	dials.insert(Dial(a));
+	dials.insert(Dial(b));
+	dials.insert(Dial(c));
+	dials.insert(Dial(d));
 
 }
 

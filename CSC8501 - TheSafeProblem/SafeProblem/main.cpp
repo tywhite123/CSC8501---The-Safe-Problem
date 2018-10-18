@@ -1,59 +1,67 @@
-#include "Lock.h"
+#include "Safe.h"
 #include "HashFunctions.h"
 #include <time.h>
+#include <vector>
+#include <fstream>
 
 int main() {
 
 
 	srand(time(NULL));
+	//srand(700000);
 
-	HashFunctions h;
-
+	
+	//bool isValid = true;
 	int print = 0;
 
-	int uhfA, uhfB, uhfC, uhfD;
-	int lhfA, lhfB, lhfC, lhfD;
-	int phfA, phfB, phfC, phfD;
 
-	uhfA = rand() % 10;
-	uhfB = rand() % 10;
-	uhfC = rand() % 10;
-	uhfD = rand() % 10;
+	int UHF[4];
+	int LHF[4];
+	int PHF[4];
+
+	UHF[0] = rand() % 10;
+	UHF[1] = rand() % 10;
+	UHF[2] = rand() % 10;
+	UHF[3] = rand() % 10;
 
 	if (rand() % 2 == 0)
-		uhfA = -uhfA;
+		UHF[0] = -UHF[0];
 	if (rand() % 2 == 0)
-		uhfB = -uhfB;
+		UHF[1] = -UHF[1];
 	if (rand() % 2 == 0)
-		uhfC = -uhfC;
+		UHF[2] = -UHF[2];
 	if (rand() % 2 == 0)
-		uhfD = -uhfD;
+		UHF[3] = -UHF[3];
 
-	std::cout << "UHF:\t" << uhfA << ", " << uhfB << ", " << uhfC << ", " << uhfD << std::endl;
+	std::cout << "UHF:\t" << UHF[0] << ", " << UHF[1] << ", " << UHF[2] << ", " << UHF[3] << std::endl;
 
 
-	lhfA = rand() % 19 - 9;
-	lhfB = rand() % 19 - 9;
-	lhfC = rand() % 19 - 9;
-	lhfD = rand() % 19 - 9;
+	LHF[0] = rand() % 19 - 9;
+	LHF[1] = rand() % 19 - 9;
+	LHF[2] = rand() % 19 - 9;
+	LHF[3] = rand() % 19 - 9;
 
-	std::cout << "LHF:\t" << lhfA << ", " << lhfB << ", " << lhfC << ", " << lhfD << std::endl;
+	std::cout << "LHF:\t" << LHF[0] << ", " << LHF[1] << ", " << LHF[2] << ", " << LHF[3] << std::endl;
 
-	phfA = rand() % 19 - 9;
-	phfB = rand() % 19 - 9;
-	phfC = rand() % 19 - 9;
-	phfD = rand() % 19 - 9;
+	PHF[0] = rand() % 19 - 9;
+	PHF[1] = rand() % 19 - 9;
+	PHF[2] = rand() % 19 - 9;
+	PHF[3] = rand() % 19 - 9;
 
-	std::cout << "PHF:\t" << phfA << ", " << phfB << ", " << phfC << ", " << phfD << std::endl;
+	std::cout << "PHF:\t" << PHF[0] << ", " << PHF[1] << ", " << PHF[2] << ", " << PHF[3] << std::endl;
 
-	std::cout << "\n----------------------------------------------------------------------------\n\n";
+	HashFunctions h(UHF, LHF, PHF);
+
+	std::vector<Lock> validRoots;
 
 	int noOfS;
 	std::cin >> noOfS;
+	
+	std::cout << "\n----------------------------------------------------------------------------\n\n";
 
 	for (int i = 0; i < noOfS; ++i) {
-
 		bool isValid = true;
+		
 		/*std::cout << "Solution " << i + 1 << std::endl << std::endl;*/
 
 		int a, b, c, d;
@@ -85,17 +93,17 @@ int main() {
 
 			if (j == 0) {
 
-				CN[j][0] = l.getAt(0) + uhfA;
-				CN[j][1] = l.getAt(1) + uhfB;
-				CN[j][2] = l.getAt(2) + uhfC;
-				CN[j][3] = l.getAt(3) + uhfD;
+				CN[j][0] = l.getAt(0) + UHF[0];
+				CN[j][1] = l.getAt(1) + UHF[1];
+				CN[j][2] = l.getAt(2) + UHF[2];
+				CN[j][3] = l.getAt(3) + UHF[3];
 			}
 			else
 			{
-				CN[j][0] = HN[j-1][0] + lhfA;
-				CN[j][1] = HN[j-1][1] + lhfB;
-				CN[j][2] = HN[j-1][2] + lhfC;
-				CN[j][3] = HN[j-1][3] + lhfD;
+				CN[j][0] = HN[j-1][0] + LHF[0];
+				CN[j][1] = HN[j-1][1] + LHF[1];
+				CN[j][2] = HN[j-1][2] + LHF[2];
+				CN[j][3] = HN[j-1][3] + LHF[3];
 			}
 
 			//std::cout << "CN" << j << ":";
@@ -104,10 +112,10 @@ int main() {
 			//std::cout << "\t"; //<< std::endl;
 
 
-			LN[j][0] = CN[j][0] + lhfA;
-			LN[j][1] = CN[j][1] + lhfB;
-			LN[j][2] = CN[j][2] + lhfC;
-			LN[j][3] = CN[j][3] + lhfD;
+			LN[j][0] = CN[j][0] + LHF[0];
+			LN[j][1] = CN[j][1] + LHF[1];
+			LN[j][2] = CN[j][2] + LHF[2];
+			LN[j][3] = CN[j][3] + LHF[3];
 						 
 			//std::cout << "LN" << j << ":";
 			//for (int i = 0; i < 4; i++)
@@ -116,10 +124,10 @@ int main() {
 
 
 
-			HN[j][0] = LN[j][0] + phfA;
-			HN[j][1] = LN[j][1] + phfB;
-			HN[j][2] = LN[j][2] + phfC;
-			HN[j][3] = LN[j][3] + phfD;
+			HN[j][0] = LN[j][0] + PHF[0];
+			HN[j][1] = LN[j][1] + PHF[1];
+			HN[j][2] = LN[j][2] + PHF[2];
+			HN[j][3] = LN[j][3] + PHF[3];
 
 			/*std::cout << "HN" << j << ":";
 			for (int i = 0; i < 4; i++)
@@ -142,7 +150,7 @@ int main() {
 		}
 
 		if (isValid) {
-
+			validRoots.push_back(l);
 			++print;
 			std::cout << "\tSolution " << print << std::endl << std::endl;
 
@@ -175,6 +183,37 @@ int main() {
 	}
 
 	std::cout << "Total Number of Solutions: " << print;
+
+	std::ofstream keyFile("key_file.txt");
+
+	if (keyFile) {
+		keyFile << "NS " << validRoots.size() << std::endl;
+
+		for(int i = 0; i < validRoots.size(); ++i)
+		{
+			keyFile << "ROOT " << validRoots[i].getAt(0).getEntry()
+				<< validRoots[i].getAt(1).getEntry()
+				<< validRoots[i].getAt(2).getEntry()
+				<< validRoots[i].getAt(3).getEntry() << std::endl;
+
+			keyFile << "UHF " << UHF[0] << ","
+				<< UHF[1] << ","
+				<< UHF[2] << ","
+				<< UHF[3] << std::endl;
+
+			keyFile << "LHF " << LHF[0] << ","
+				<< LHF[1] << ","
+				<< LHF[2] << ","
+				<< LHF[3] << std::endl;
+
+			keyFile << "PHF " << PHF[0] << ","
+				<< PHF[1] << ","
+				<< PHF[2] << ","
+				<< PHF[3] << std::endl;
+		}
+	}
+
+	keyFile.close();
 	
 	return 0;
 }
