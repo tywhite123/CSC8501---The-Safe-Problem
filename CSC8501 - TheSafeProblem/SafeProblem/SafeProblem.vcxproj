@@ -112,12 +112,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Dial.h" />
+    <ClInclude Include="HashFunctions.h" />
     <ClInclude Include="Lock.h" />
     <ClInclude Include="Safe.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dial.cpp" />
+    <ClCompile Include="HashFunctions.cpp" />
     <ClCompile Include="Lock.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Safe.cpp" />
     <ClCompile Include="Vec.cpp" />
   </ItemGroup>

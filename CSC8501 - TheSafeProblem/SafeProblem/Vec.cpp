@@ -15,6 +15,7 @@ public:
 	T getAt(int i) { return store[i]; }
 
 
+
 	void insert(T t);
 
 

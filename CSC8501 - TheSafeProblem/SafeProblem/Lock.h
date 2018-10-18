@@ -12,6 +12,7 @@ public:
 
 
 	Dial getAt(int i) { return lock.getAt(i); }
+	Vec<Dial, 4> getLock() { return lock; }
 
 
 
