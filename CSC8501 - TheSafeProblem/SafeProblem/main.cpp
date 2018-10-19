@@ -4,20 +4,8 @@
 #include <vector>
 #include <fstream>
 
-int main() {
 
-
-	srand(time(NULL));
-	//srand(700000);
-
-	
-	//bool isValid = true;
-	int print = 0;
-
-
-	int UHF[4];
-	int LHF[4];
-	int PHF[4];
+void generateHashes(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4]) {
 
 	UHF[0] = rand() % 10;
 	UHF[1] = rand() % 10;
@@ -50,9 +38,30 @@ int main() {
 
 	std::cout << "PHF:\t" << PHF[0] << ", " << PHF[1] << ", " << PHF[2] << ", " << PHF[3] << std::endl;
 
+}
+
+
+int main() {
+
+
+	srand(time(NULL));
+	//srand(700000);
+
+	
+	//bool isValid = true;
+	int print = 0;
+
+	int UHF[4];
+	int LHF[4];
+	int PHF[4];
+
+	generateHashes(UHF, LHF, PHF);
+
 	HashFunctions h(UHF, LHF, PHF);
+	
 
 	std::vector<Lock> validRoots;
+	std::vector<Safe*> validSafe;
 
 	int noOfS;
 	std::cin >> noOfS;
@@ -61,12 +70,8 @@ int main() {
 
 	for (int i = 0; i < noOfS; ++i) {
 		bool isValid = true;
-		
-		/*std::cout << "Solution " << i + 1 << std::endl << std::endl;*/
 
 		int a, b, c, d;
-		/*std::cout << "Please Enter Root: " << std::endl;
-		std::cin >> a >> b >> c >> d;*/
 
 		/*a = rand() % 10;
 		b = rand() % 10;
@@ -78,33 +83,76 @@ int main() {
 		b = i % 1000 / 100;
 		a = i / 1000;
 
-		//std::cout << "ROOT:\t" << a << b << c << d << std::endl;
+
+		/*Lock l(a, b, c, d);
+
+		Vec<Dial, 4>* CNTest = l.getCN();
+		Vec<Dial, 4>* LNTest = l.getLN();
+		Vec<Dial, 4>* HNTest = l.getHN();
+
+		h.hashRoot(l.getLock(), CNTest, LNTest, HNTest);*/
 
 
-		Lock l(a, b, c, d);
+		Safe s(a, b, c, d);
 
-		//h.hashRoot(l.getLock());
+		//MULTI LOCK SAFE
 
-		Dial CN[5][4];
+
+
+
+
+		/*Dial CN[5][4];
 		Dial LN[5][4];
-		Dial HN[5][4];
+		Dial HN[5][4];*/
 
-		for (int j = 0; j < 5; ++j) {
+		for (int j = 0; j < 5 && isValid; ++j) {
 
-			if (j == 0) {
+			Lock* l = &s.getLockAt(j);
+			Vec<Dial, 4>* CNHash = l->getCN();
+			Vec<Dial, 4>* LNHash = l->getLN();
+			Vec<Dial, 4>* HNHash = l->getHN();
 
-				CN[j][0] = l.getAt(0) + UHF[0];
-				CN[j][1] = l.getAt(1) + UHF[1];
-				CN[j][2] = l.getAt(2) + UHF[2];
-				CN[j][3] = l.getAt(3) + UHF[3];
+			isValid = h.hashRoot(l->getLock(), CNHash, LNHash, HNHash);
+
+
+			//std::cout << "\tROOT:\t" << a << b << c << d << std::endl;
+			//	
+			//std::cout << "\tCN" << j << ":";
+			//for (int i = 0; i < 4; i++)
+			//	std::cout << CNHash->getAt(i).getEntry();
+			//std::cout << "\t"; //<< std::endl;
+
+			//std::cout << "LN" << j << ":";
+			//for (int i = 0; i < 4; i++)
+			//	std::cout << LNHash->getAt(i).getEntry();
+			//std::cout << "\t"; //<< std::endl;
+
+			//std::cout << "HN" << j << ":";
+			//for (int i = 0; i < 4; i++)
+			//	std::cout << HNHash->getAt(i).getEntry();
+			//std::cout << std::endl;
+			//
+
+			if (j < 4) {
+				s.nextLockRoot();
 			}
-			else
-			{
-				CN[j][0] = HN[j-1][0] + LHF[0];
-				CN[j][1] = HN[j-1][1] + LHF[1];
-				CN[j][2] = HN[j-1][2] + LHF[2];
-				CN[j][3] = HN[j-1][3] + LHF[3];
-			}
+
+
+			//if (j == 0) {
+			//	
+
+			//	/*CN[j][0] = l.getAt(0) + UHF[0];
+			//	CN[j][1] = l.getAt(1) + UHF[1];
+			//	CN[j][2] = l.getAt(2) + UHF[2];
+			//	CN[j][3] = l.getAt(3) + UHF[3];*/
+			//}
+			//else
+			//{
+			//	CN[j][0] = HN[j-1][0] + LHF[0];
+			//	CN[j][1] = HN[j-1][1] + LHF[1];
+			//	CN[j][2] = HN[j-1][2] + LHF[2];
+			//	CN[j][3] = HN[j-1][3] + LHF[3];
+			//}
 
 			//std::cout << "CN" << j << ":";
 			//for (int i = 0; i < 4; i++)
@@ -112,77 +160,124 @@ int main() {
 			//std::cout << "\t"; //<< std::endl;
 
 
-			LN[j][0] = CN[j][0] + LHF[0];
-			LN[j][1] = CN[j][1] + LHF[1];
-			LN[j][2] = CN[j][2] + LHF[2];
-			LN[j][3] = CN[j][3] + LHF[3];
-						 
-			//std::cout << "LN" << j << ":";
-			//for (int i = 0; i < 4; i++)
-			//	std::cout << LN[j][i].getEntry();
-			//std::cout << "\t"; //<< std::endl;
+			//LN[j][0] = CN[j][0] + LHF[0];
+			//LN[j][1] = CN[j][1] + LHF[1];
+			//LN[j][2] = CN[j][2] + LHF[2];
+			//LN[j][3] = CN[j][3] + LHF[3];
+			//			 
+			////std::cout << "LN" << j << ":";
+			////for (int i = 0; i < 4; i++)
+			////	std::cout << LN[j][i].getEntry();
+			////std::cout << "\t"; //<< std::endl;
 
 
 
-			HN[j][0] = LN[j][0] + PHF[0];
-			HN[j][1] = LN[j][1] + PHF[1];
-			HN[j][2] = LN[j][2] + PHF[2];
-			HN[j][3] = LN[j][3] + PHF[3];
+			//HN[j][0] = LN[j][0] + PHF[0];
+			//HN[j][1] = LN[j][1] + PHF[1];
+			//HN[j][2] = LN[j][2] + PHF[2];
+			//HN[j][3] = LN[j][3] + PHF[3];
 
 			/*std::cout << "HN" << j << ":";
 			for (int i = 0; i < 4; i++)
 				std::cout << HN[j][i].getEntry();
 			std::cout << std::endl;*/
 
-			
+
+
+
+
+			//CHECKING CN
+
+
 			//How the check with work
-			for (int i = 0; i < 3 /*|| isValid*/; ++i) {
-				for (int k = i + 1; k < 4 /*|| isValid*/; ++k) {
-					//std::cout << "Comparing: " << CN[i].getEntry() << " & " << CN[j].getEntry() << std::endl;
-					if (CN[j][i].getEntry() == CN[j][k].getEntry()) {
-						//std::cout << "They are the same value, so invalid CN" << std::endl;
-						isValid = false;
-						break;
-					}
-				}
-			}
+			//for (int i = 0; i < 3 /*|| isValid*/; ++i) {
+			//	for (int k = i + 1; k < 4 /*|| isValid*/; ++k) {
+			//		//std::cout << "Comparing: " << CN[i].getEntry() << " & " << CN[j].getEntry() << std::endl;
+			//		if (CN[j][i].getEntry() == CN[j][k].getEntry()) {
+			//			//std::cout << "They are the same value, so invalid CN" << std::endl;
+			//			isValid = false;
+			//			break;
+			//		}
+			//	}
+			//}
 
 		}
 
 		if (isValid) {
-			validRoots.push_back(l);
-			++print;
-			std::cout << "\tSolution " << print << std::endl << std::endl;
-
-			std::cout << "\tROOT:\t" << a << b << c << d << std::endl;
-
-			for (int j = 0; j < 5; ++j) {
-				std::cout << "\tCN" << j << ":";
-				for (int i = 0; i < 4; i++)
-					std::cout << CN[j][i].getEntry();
-				std::cout << "\t"; //<< std::endl;
-
-				std::cout << "LN" << j << ":";
-				for (int i = 0; i < 4; i++)
-					std::cout << LN[j][i].getEntry();
-				std::cout << "\t"; //<< std::endl;
-
-				std::cout << "HN" << j << ":";
-				for (int i = 0; i < 4; i++)
-					std::cout << HN[j][i].getEntry();
-				std::cout << std::endl;
-			}
-
-			
-
-			std::cout << "\n----------------------------------------------------------------------------\n\n";
+			validSafe.push_back(&s);				
 
 		}
+	}  
 
-		/*std::cout << "\n----------------------------------------------------------------------------\n\n";*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		//THINGS THAT NEED TO BE MOVED
+
+
+
+
+		//CONSOLE PRINTING
+
+	//	if (isValid) {
+	//		validRoots.push_back(l);
+	//		++print;
+	//		std::cout << "\tSolution " << print << std::endl << std::endl;
+
+	//		std::cout << "\tROOT:\t" << a << b << c << d << std::endl;
+
+	//		for (int j = 0; j < 5; ++j) {
+	//			std::cout << "\tCN" << j << ":";
+	//			for (int i = 0; i < 4; i++)
+	//				std::cout << CN[j][i].getEntry();
+	//			std::cout << "\t"; //<< std::endl;
+
+	//			std::cout << "LN" << j << ":";
+	//			for (int i = 0; i < 4; i++)
+	//				std::cout << LN[j][i].getEntry();
+	//			std::cout << "\t"; //<< std::endl;
+
+	//			std::cout << "HN" << j << ":";
+	//			for (int i = 0; i < 4; i++)
+	//				std::cout << HN[j][i].getEntry();
+	//			std::cout << std::endl;
+	//		}
+
+	//		
+
+	//		std::cout << "\n----------------------------------------------------------------------------\n\n";
+
+	//	}
+
+	//	/*std::cout << "\n----------------------------------------------------------------------------\n\n";*/
+	//}
+
+	//std::cout << "Total Number of Solutions: " << print;
+
+
+
+	for (int i = 0; i < validSafe.size; ++i){
+
 	}
 
-	std::cout << "Total Number of Solutions: " << print;
+
+
+
+	//FILE IO				
+
 
 	std::ofstream keyFile("key_file.txt");
 

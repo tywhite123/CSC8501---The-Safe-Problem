@@ -25,6 +25,12 @@ Lock::Lock(int a, int b, int c, int d)
 
 }
 
+Lock::Lock(Vec<Dial, 4> Root)
+{
+	for(int i = 0; i < 4; ++i)
+		dials.insert(Dial(Root.getAt(i).getEntry()));
+}
+
 Lock::~Lock()
 {
 }

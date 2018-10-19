@@ -30,6 +30,7 @@ private:
 template <typename T, int N>
 Vec<T,N>::Vec()
 {
+	i = 0;
 }
 
 //Constructor that uses variadic arguments which means that it can take in a 
@@ -63,6 +64,8 @@ void Vec<T, N>::insert(T t)
 		++i;
 	}
 }
+
+
 
 
 

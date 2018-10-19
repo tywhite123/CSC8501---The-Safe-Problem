@@ -55,16 +55,34 @@ HashFunctions::~HashFunctions()
 {
 }
 
-void HashFunctions::hashRoot(Vec<Dial, 4>& Root)
+bool HashFunctions::hashRoot(Vec<Dial, 4>& Root, Vec<Dial, 4>*&CN, Vec<Dial, 4>*&LN, Vec<Dial, 4>*&HN)
 {
-	Vec<Dial, 4> testCN;
+
+	bool validCN = true;
+	
+	for (int i = 0; i < 4; ++i)
+		CN->insert(Root.getAt(i) + UHF.getAt(i));
+
+	for (int i = 0; i < 3; ++i) {
+		for (int j = i + 1; j < 4; ++j) {
+			if (CN->getAt(i).getEntry() == CN->getAt(j).getEntry()) {
+				validCN = false;
+			}
+		}
+	}
+
+	/*std::cout << CN.getAt(0).getEntry()
+		<< CN.getAt(1).getEntry()
+		<< CN.getAt(2).getEntry()
+		<< CN.getAt(3).getEntry()
+		<<  " ";*/
 
 	for (int i = 0; i < 4; ++i)
-		testCN.insert(Root.getAt(i) + UHF.getAt(i));
+		LN->insert(CN->getAt(i) + LHF.getAt(i));
+	
+	for (int i = 0; i < 4; ++i)
+		HN->insert(LN->getAt(i) + PHF.getAt(i));
 
-	std::cout << testCN.getAt(0).getEntry()
-		<< testCN.getAt(1).getEntry()
-		<< testCN.getAt(2).getEntry()
-		<< testCN.getAt(3).getEntry()
-		<< std::endl;
+	return validCN;
+
 }
