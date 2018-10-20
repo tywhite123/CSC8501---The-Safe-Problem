@@ -93,7 +93,7 @@ int main() {
 		h.hashRoot(l.getLock(), CNTest, LNTest, HNTest);*/
 
 
-		Safe s(a, b, c, d);
+		Safe* s = new Safe(a, b, c, d);
 
 		//MULTI LOCK SAFE
 
@@ -107,12 +107,16 @@ int main() {
 
 		for (int j = 0; j < 5 && isValid; ++j) {
 
-			Lock* l = &s.getLockAt(j);
+			Lock* l = &s->getLockAt(j);
 			Vec<Dial, 4>* CNHash = l->getCN();
 			Vec<Dial, 4>* LNHash = l->getLN();
 			Vec<Dial, 4>* HNHash = l->getHN();
 
 			isValid = h.hashRoot(l->getLock(), CNHash, LNHash, HNHash);
+
+			//s->hash(h);
+
+			//s->insertCN(CNHash);
 
 
 			//std::cout << "\tROOT:\t" << a << b << c << d << std::endl;
@@ -134,7 +138,7 @@ int main() {
 			//
 
 			if (j < 4) {
-				s.nextLockRoot();
+				s->nextLockRoot();
 			}
 
 
@@ -204,7 +208,7 @@ int main() {
 		}
 
 		if (isValid) {
-			validSafe.push_back(&s);				
+			validSafe.push_back(s);				
 
 		}
 	}  
@@ -267,11 +271,45 @@ int main() {
 
 	//std::cout << "Total Number of Solutions: " << print;
 
+	int p = 0;
 
+	for (int i = 0; i < validSafe.size(); ++i){
+		std::cout << "\tSolution " << i+1 << std::endl << std::endl;
 
-	for (int i = 0; i < validSafe.size; ++i){
+		std::cout << "\tROOT:\t" << validSafe[i]->getLockAt(0).getLock().getAt(0).getEntry()
+		<< validSafe[i]->getLockAt(0).getLock().getAt(1).getEntry()
+		<< validSafe[i]->getLockAt(0).getLock().getAt(2).getEntry()
+		<< validSafe[i]->getLockAt(0).getLock().getAt(3).getEntry() << std::endl;
 
-	}
+				for (int j = 0; j < 5; ++j) {
+					std::cout << "\tCN" << j << ":";
+					for (int k = 0; k < 4; k++)
+						std::cout << validSafe[i]->getLockAt(j).getCN()->getAt(k).getEntry();
+					std::cout << "\t"; //<< std::endl;
+
+					std::cout << "LN" << j << ":";
+					for (int k = 0; k < 4; k++)
+ 						std::cout << validSafe[i]->getLockAt(j).getLN()->getAt(k).getEntry();
+					std::cout << "\t"; //<< std::endl;
+
+					std::cout << "HN" << j << ":";
+					for (int k = 0; k < 4; k++)
+						std::cout << validSafe[i]->getLockAt(j).getHN()->getAt(k).getEntry();
+					std::cout << std::endl;
+				}
+
+				
+
+				std::cout << "\n----------------------------------------------------------------------------\n\n";
+				p = i;
+
+			}
+
+			/*std::cout << "\n----------------------------------------------------------------------------\n\n";*/
+		
+
+	std::cout << "Total Number of Solutions: " << p;
+	
 
 
 
@@ -309,6 +347,12 @@ int main() {
 	}
 
 	keyFile.close();
+
+	for(int i = 0; i < validSafe.size(); ++i)
+	{
+		delete validSafe[i];
+		validSafe[i] = NULL;
+	}
 	
 	return 0;
 }

@@ -34,3 +34,4 @@ Lock::Lock(Vec<Dial, 4> Root)
 Lock::~Lock()
 {
 }
+

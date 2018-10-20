@@ -18,3 +18,9 @@ void Safe::nextLockRoot()
 	locks.insert(Lock(*locks.getAt(currentLock-1).getHN()));
 
 }
+
+//void Safe::hash(HashFunctions & hash)
+//{
+//	for (int i = 0; i < 4; ++i)
+//		getCurrentLock()->getCN()->insert(getCurrentLock()->getLock().getAt(i) + hash.getUHF().getAt(i));
+//}

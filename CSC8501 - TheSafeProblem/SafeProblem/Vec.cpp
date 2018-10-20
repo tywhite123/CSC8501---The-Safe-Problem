@@ -13,6 +13,7 @@ public:
 	~Vec();
 
 	T getAt(int i) { return store[i]; }
+	T* getStore() { return &store; }
 
 
 
