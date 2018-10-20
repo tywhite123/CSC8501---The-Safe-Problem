@@ -107,7 +107,7 @@ int main() {
 
 		for (int j = 0; j < 5 && isValid; ++j) {
 
-			Lock* l = &s->getLockAt(j);
+			Lock* l = s->getLockAt(j);
 			Vec<Dial, 4>* CNHash = l->getCN();
 			Vec<Dial, 4>* LNHash = l->getLN();
 			Vec<Dial, 4>* HNHash = l->getHN();
@@ -276,25 +276,25 @@ int main() {
 	for (int i = 0; i < validSafe.size(); ++i){
 		std::cout << "\tSolution " << i+1 << std::endl << std::endl;
 
-		std::cout << "\tROOT:\t" << validSafe[i]->getLockAt(0).getLock().getAt(0).getEntry()
-		<< validSafe[i]->getLockAt(0).getLock().getAt(1).getEntry()
-		<< validSafe[i]->getLockAt(0).getLock().getAt(2).getEntry()
-		<< validSafe[i]->getLockAt(0).getLock().getAt(3).getEntry() << std::endl;
+		std::cout << "\tROOT:\t" << validSafe[i]->getLockAt(0)->getLock().getAt(0).getEntry()
+		<< validSafe[i]->getLockAt(0)->getLock().getAt(1).getEntry()
+		<< validSafe[i]->getLockAt(0)->getLock().getAt(2).getEntry()
+		<< validSafe[i]->getLockAt(0)->getLock().getAt(3).getEntry() << std::endl;
 
 				for (int j = 0; j < 5; ++j) {
 					std::cout << "\tCN" << j << ":";
 					for (int k = 0; k < 4; k++)
-						std::cout << validSafe[i]->getLockAt(j).getCN()->getAt(k).getEntry();
+						std::cout << validSafe[i]->getLockAt(j)->getCN()->getAt(k).getEntry();
 					std::cout << "\t"; //<< std::endl;
 
 					std::cout << "LN" << j << ":";
 					for (int k = 0; k < 4; k++)
- 						std::cout << validSafe[i]->getLockAt(j).getLN()->getAt(k).getEntry();
+ 						std::cout << validSafe[i]->getLockAt(j)->getLN()->getAt(k).getEntry();
 					std::cout << "\t"; //<< std::endl;
 
 					std::cout << "HN" << j << ":";
 					for (int k = 0; k < 4; k++)
-						std::cout << validSafe[i]->getLockAt(j).getHN()->getAt(k).getEntry();
+						std::cout << validSafe[i]->getLockAt(j)->getHN()->getAt(k).getEntry();
 					std::cout << std::endl;
 				}
 

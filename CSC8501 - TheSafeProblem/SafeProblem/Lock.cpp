@@ -23,6 +23,10 @@ Lock::Lock(int a, int b, int c, int d)
 	dials.insert(Dial(c));
 	dials.insert(Dial(d));
 
+	CN = Vec<Dial, 4>();
+	LN = Vec<Dial, 4>();
+	HN = Vec<Dial, 4>();
+
 }
 
 Lock::Lock(Vec<Dial, 4> Root)
@@ -34,4 +38,5 @@ Lock::Lock(Vec<Dial, 4> Root)
 Lock::~Lock()
 {
 }
+
 
