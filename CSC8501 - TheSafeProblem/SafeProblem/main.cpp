@@ -106,13 +106,13 @@ int main() {
 		Dial HN[5][4];*/
 
 		for (int j = 0; j < 5 && isValid; ++j) {
+			Lock* l = s->getCurrentLock();
+			Vec<Dial, 4>* Root = s->getCurrentLock()->getLock();
+			Vec<Dial, 4>* CNHash = s->getCurrentLock()->getCN();
+			Vec<Dial, 4>* LNHash = s->getCurrentLock()->getLN();
+			Vec<Dial, 4>* HNHash = s->getCurrentLock()->getHN();
 
-			Lock* l = s->getLockAt(j);
-			Vec<Dial, 4>* CNHash = l->getCN();
-			Vec<Dial, 4>* LNHash = l->getLN();
-			Vec<Dial, 4>* HNHash = l->getHN();
-
-			isValid = h.hashRoot(l->getLock(), CNHash, LNHash, HNHash);
+			isValid = h.hashRoot(Root, CNHash, LNHash, HNHash);
 
 			//s->hash(h);
 
@@ -276,10 +276,10 @@ int main() {
 	for (int i = 0; i < validSafe.size(); ++i){
 		std::cout << "\tSolution " << i+1 << std::endl << std::endl;
 
-		std::cout << "\tROOT:\t" << validSafe[i]->getLockAt(0)->getLock().getAt(0).getEntry()
-		<< validSafe[i]->getLockAt(0)->getLock().getAt(1).getEntry()
-		<< validSafe[i]->getLockAt(0)->getLock().getAt(2).getEntry()
-		<< validSafe[i]->getLockAt(0)->getLock().getAt(3).getEntry() << std::endl;
+		std::cout << "\tROOT:\t" << validSafe[i]->getLockAt(0)->getLock()->getAt(0).getEntry()
+		<< validSafe[i]->getLockAt(0)->getLock()->getAt(1).getEntry()
+		<< validSafe[i]->getLockAt(0)->getLock()->getAt(2).getEntry()
+		<< validSafe[i]->getLockAt(0)->getLock()->getAt(3).getEntry() << std::endl;
 
 				for (int j = 0; j < 5; ++j) {
 					std::cout << "\tCN" << j << ":";

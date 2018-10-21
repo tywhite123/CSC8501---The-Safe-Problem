@@ -13,7 +13,7 @@ public:
 
 
 	Dial getAt(int i) { return dials.getAt(i); }
-	Vec<Dial, 4> getLock() { return dials; }
+	Vec<Dial, 4>* getLock() { return &dials; }
 
 	Vec<Dial,4>* getCN() { return &CN; }
 	Vec<Dial, 4>* getLN() { return &LN; }

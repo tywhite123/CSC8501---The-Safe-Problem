@@ -55,13 +55,13 @@ HashFunctions::~HashFunctions()
 {
 }
 
-bool HashFunctions::hashRoot(Vec<Dial, 4>& Root, Vec<Dial, 4>*&CN, Vec<Dial, 4>*&LN, Vec<Dial, 4>*&HN)
+bool HashFunctions::hashRoot(Vec<Dial, 4>*& Root, Vec<Dial, 4>*&CN, Vec<Dial, 4>*&LN, Vec<Dial, 4>*&HN)
 {
 
 	bool validCN = true;
 	
 	for (int i = 0; i < 4; ++i)
-		CN->insert(Root.getAt(i) + UHF.getAt(i));
+		CN->insert(Root->getAt(i) + UHF.getAt(i));
 
 	for (int i = 0; i < 3; ++i) {
 		for (int j = i + 1; j < 4; ++j) {
@@ -86,3 +86,5 @@ bool HashFunctions::hashRoot(Vec<Dial, 4>& Root, Vec<Dial, 4>*&CN, Vec<Dial, 4>*
 	return validCN;
 
 }
+
+
