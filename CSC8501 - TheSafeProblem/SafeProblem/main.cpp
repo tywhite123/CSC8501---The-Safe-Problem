@@ -320,14 +320,14 @@ int main() {
 	std::ofstream keyFile("key_file.txt");
 
 	if (keyFile) {
-		keyFile << "NS " << validRoots.size() << std::endl;
+		keyFile << "NS " << validSafe.size() << std::endl;
 
-		for(int i = 0; i < validRoots.size(); ++i)
+		for(int i = 0; i < validSafe.size(); ++i)
 		{
-			keyFile << "ROOT " << validRoots[i].getAt(0).getEntry()
-				<< validRoots[i].getAt(1).getEntry()
-				<< validRoots[i].getAt(2).getEntry()
-				<< validRoots[i].getAt(3).getEntry() << std::endl;
+			keyFile << "ROOT " << validSafe[i]->getLockAt(0)->getLock()->getAt(0).getEntry()
+				<< validSafe[i]->getLockAt(0)->getLock()->getAt(1).getEntry()
+				<< validSafe[i]->getLockAt(0)->getLock()->getAt(2).getEntry()
+				<< validSafe[i]->getLockAt(0)->getLock()->getAt(3).getEntry() << std::endl;
 
 			keyFile << "UHF " << UHF[0] << ","
 				<< UHF[1] << ","
