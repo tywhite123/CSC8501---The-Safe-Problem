@@ -10,6 +10,8 @@ Safe::Safe(int a, int b, int c, int d)
 
 Safe::~Safe()
 {
+	for (int i = 0; i < 5; ++i)
+		delete locks.getAt(i);
 }
 
 void Safe::nextLockRoot()
