@@ -52,10 +52,8 @@ int main() {
 
 		//MULTI LOCK SAFE
 
-
-
 		for (int j = 0; j < 5 && isValid; ++j) {
-			Lock* l = s->getCurrentLock();
+			//Lock* l = s->getCurrentLock();
 			Vec<Dial, 4>* Root = s->getCurrentLock()->getLock();
 			Vec<Dial, 4>* CNHash = s->getCurrentLock()->getCN();
 			Vec<Dial, 4>* LNHash = s->getCurrentLock()->getLN();
@@ -96,7 +94,7 @@ int main() {
 
 
 
-		//THINGS THAT NEED TO BE MOVED
+		//TODO: THINGS THAT NEED TO BE MOVED
 
 
 
@@ -143,7 +141,8 @@ int main() {
 
 
 
-	//FILE IO				
+	//FILE IO	
+	//TODO: Move into a seperate file
 
 
 	std::ofstream keyFile("key_file.txt");
@@ -176,6 +175,52 @@ int main() {
 	}
 
 	keyFile.close();
+
+
+	std::ofstream multiSafeFile("multi_safe_file.txt");
+
+
+	if (multiSafeFile) {
+		multiSafeFile << "NS " << validSafe.size() << std::endl;
+
+		for(int i = 0; i < validSafe.size(); ++i)
+		{
+			
+			for(int j = 0; j < 5; ++j)
+			{
+				
+				multiSafeFile << "CN" << j << " ";
+				for (int k = 0; k < 4; ++k)
+					multiSafeFile << validSafe[i]->getLockAt(j)->getCN()->getAt(k).getEntry();
+
+				multiSafeFile << " ";
+
+
+				multiSafeFile << "LN" << j << " ";
+				for (int k = 0; k < 4; ++k)
+					multiSafeFile << validSafe[i]->getLockAt(j)->getLN()->getAt(k).getEntry();
+
+				multiSafeFile << " ";
+
+				multiSafeFile << "HN" << j << " ";
+				for (int k = 0; k < 4; ++k)
+					multiSafeFile << validSafe[i]->getLockAt(j)->getHN()->getAt(k).getEntry();
+
+				multiSafeFile << " ";
+
+				multiSafeFile << std::endl;
+
+			}
+
+			multiSafeFile << std::endl;
+
+		}
+
+	}
+
+
+	multiSafeFile.close();
+
 
 	for(int i = 0; i < validSafe.size(); ++i)
 	{
