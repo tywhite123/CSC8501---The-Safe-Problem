@@ -1,4 +1,6 @@
 #include "FileIO.h"
+#include <regex>
+#include<sstream>
 
 
 
@@ -98,8 +100,56 @@ void FileIO::readInKeyFile(string filepath, HashFunctions & h, vector<Safe*>& sa
 {
 	//TODO: REGEX FOR READING A KEY FILE
 	//[0-9]+|[0-9 ]+ (For reading root)
-	//
+	//((\+|-)?[0-9]+, ?){3}(\+|-)?[0-9]+ (For reading hash functions)
 
+	regex root("[0-9]+|[0-9 ]+");
+	regex type("(ROOT|UHF|LHF|PHF) ?");
+	regex hash("((\\+|-)?[0-9]+, ?){3}(\\+|-)?[0-9]+");
+
+	//(UHF|LHF|PHF) ?
+
+	fstream keyFile(filepath);
+
+	if (keyFile) {
+		string line;
+		bool hashEntered = false;
+
+		while (getline(keyFile, line)) {
+
+			//Split the space
+
+			if (regex_match(line, root)) {
+				//TODO: Split root into 4 different numbers
+
+				/*
+					4 is 12345 % 10
+					3 is 12345 / 10 % 10
+					2 is 12345 / 100 % 10
+					1 is 12345 / 1000 % 10
+				*/
+
+				
+			}
+			else if (regex_match(line, hash) && !hashEntered) {
+				stringstream split(line);
+				
+				while (split.good()) {
+					string substr;
+					getline(split, substr, ',');
+					int value = stoi(substr);
+
+					//TODO: ADD VALUES TO THE CORRECT VECTOR
+
+				}
+			}
+			else {
+				//TODO: THROW EXCEPTION
+			}
+
+		}
+	}
+
+	keyFile.close()
 
 
 }
