@@ -1,8 +1,5 @@
-#include "Safe.h"
-#include "HashFunctions.h"
+#include "FileIO.h"
 #include <time.h>
-#include <vector>
-#include <fstream>
 
 
 void generateHashes(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4]);
@@ -73,7 +70,7 @@ int main() {
 		}
 
 		if (isValid) {
-			validSafe.push_back(s);				
+			validSafe.push_back(s);	
 
 		}
 	}  
@@ -101,7 +98,6 @@ int main() {
 
 		//CONSOLE PRINTING
 
-
 	for (int i = 0; i < validSafe.size(); ++i){
 		std::cout << "\tSolution " << i+1 << std::endl << std::endl;
 
@@ -128,6 +124,16 @@ int main() {
 				}
 
 				
+				
+				/*
+				cout << "ROOT:\t";
+				for(int i = 0; i < 4; ++i)
+					cout << NS1.root[i];
+				cout << endl;
+				
+				
+				*/
+
 
 				std::cout << "\n----------------------------------------------------------------------------\n\n";
 			
@@ -144,82 +150,11 @@ int main() {
 	//FILE IO	
 	//TODO: Move into a seperate file
 
+	FileIO io;
 
-	std::ofstream keyFile("key_file.txt");
+	io.printKeyFile("key_file(test).txt", h, validSafe);
 
-	if (keyFile) {
-		keyFile << "NS " << validSafe.size() << std::endl;
-
-		for(int i = 0; i < validSafe.size(); ++i)
-		{
-			keyFile << "ROOT " << validSafe[i]->getLockAt(0)->getLock()->getAt(0).getEntry()
-				<< validSafe[i]->getLockAt(0)->getLock()->getAt(1).getEntry()
-				<< validSafe[i]->getLockAt(0)->getLock()->getAt(2).getEntry()
-				<< validSafe[i]->getLockAt(0)->getLock()->getAt(3).getEntry() << std::endl;
-
-			keyFile << "UHF " << UHF[0] << ","
-				<< UHF[1] << ","
-				<< UHF[2] << ","
-				<< UHF[3] << std::endl;
-
-			keyFile << "LHF " << LHF[0] << ","
-				<< LHF[1] << ","
-				<< LHF[2] << ","
-				<< LHF[3] << std::endl;
-
-			keyFile << "PHF " << PHF[0] << ","
-				<< PHF[1] << ","
-				<< PHF[2] << ","
-				<< PHF[3] << std::endl;
-		}
-	}
-
-	keyFile.close();
-
-
-	std::ofstream multiSafeFile("multi_safe_file.txt");
-
-
-	if (multiSafeFile) {
-		multiSafeFile << "NS " << validSafe.size() << std::endl;
-
-		for(int i = 0; i < validSafe.size(); ++i)
-		{
-			
-			for(int j = 0; j < 5; ++j)
-			{
-				
-				multiSafeFile << "CN" << j << " ";
-				for (int k = 0; k < 4; ++k)
-					multiSafeFile << validSafe[i]->getLockAt(j)->getCN()->getAt(k).getEntry();
-
-				multiSafeFile << " ";
-
-
-				multiSafeFile << "LN" << j << " ";
-				for (int k = 0; k < 4; ++k)
-					multiSafeFile << validSafe[i]->getLockAt(j)->getLN()->getAt(k).getEntry();
-
-				multiSafeFile << " ";
-
-				multiSafeFile << "HN" << j << " ";
-				for (int k = 0; k < 4; ++k)
-					multiSafeFile << validSafe[i]->getLockAt(j)->getHN()->getAt(k).getEntry();
-
-				multiSafeFile << " ";
-
-				multiSafeFile << std::endl;
-
-			}
-
-			multiSafeFile << std::endl;
-
-		}
-
-	}
-
-
-	multiSafeFile.close();
+	io.printMultiSafeFile("multi_safe(test).txt", validSafe);
 
 
 	for(int i = 0; i < validSafe.size(); ++i)
