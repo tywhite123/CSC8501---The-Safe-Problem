@@ -21,6 +21,12 @@ void Safe::nextLockRoot()
 
 }
 
+void Safe::nextLock()
+{
+	++currentLock;
+	locks.insert(new Lock());
+}
+
 //void Safe::hash(HashFunctions & hash)
 //{
 //	for (int i = 0; i < 4; ++i)

@@ -18,6 +18,7 @@ public:
 
 
 	void insert(T t);
+	int size() { return N; }
 
 
 private:

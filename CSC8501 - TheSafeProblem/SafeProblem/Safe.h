@@ -7,9 +7,11 @@ public:
 	~Safe();
 
 	void nextLockRoot();
+	void nextLock();
 	Lock* getLockAt(int i) { return locks.getAt(i); }
 	void insertCN(Vec<Dial, 4>*& hash) { locks.getAt(currentLock)->insertCN(hash); }
 	Lock* getCurrentLock() { return locks.getAt(currentLock); }
+	int whichLock() { return currentLock; }
 
 	//void hash(HashFunctions& hash);
 

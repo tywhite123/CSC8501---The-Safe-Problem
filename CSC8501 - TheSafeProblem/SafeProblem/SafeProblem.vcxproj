@@ -111,18 +111,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ConsoleIO.h" />
     <ClInclude Include="Dial.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="HashFunctions.h" />
     <ClInclude Include="Lock.h" />
+    <ClInclude Include="ProblemSolver.h" />
     <ClInclude Include="Safe.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ConsoleIO.cpp" />
     <ClCompile Include="Dial.cpp" />
     <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="HashFunctions.cpp" />
     <ClCompile Include="Lock.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ProblemSolver.cpp" />
     <ClCompile Include="Safe.cpp" />
     <ClCompile Include="Vec.cpp" />
   </ItemGroup>

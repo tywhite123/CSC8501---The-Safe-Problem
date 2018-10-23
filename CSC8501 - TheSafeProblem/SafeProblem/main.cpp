@@ -1,167 +1,145 @@
 #include "FileIO.h"
+#include "ConsoleIO.h"
+#include "ProblemSolver.h"
+#include<stdlib.h>
 #include <time.h>
+
+
 
 
 void generateHashes(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4]);
 
 
 int main() {
-
-
+	
+	
+	
 	srand(time(NULL));
+	
+	
+	
+	FileIO io;
+	ConsoleIO consoleIO;
+	ProblemSolver solve;
 
-	int UHF[4];
-	int LHF[4];
-	int PHF[4];
-
-	generateHashes(UHF, LHF, PHF);
-
-	HashFunctions h(UHF, LHF, PHF);
 	
 
-	std::vector<Lock> validRoots;
-	std::vector<Safe*> validSafe;
+	std::vector<Safe*> safes;
 
-	int noOfS;
-	std::cin >> noOfS;
+	int mode = consoleIO.selectMode();
 	
-	std::cout << "\n----------------------------------------------------------------------------\n\n";
+	if (1 == mode || 3 == mode) {
+		int noOfS = consoleIO.inputNoOfSolutions();
+		int rootGen = consoleIO.selectRandom();
+		string keyFilePath = consoleIO.inputFilePath();
+		string multiSafePath;
+		if (3 == mode)
+			multiSafePath = consoleIO.inputFilePath();
 
-	for (int i = 0; i < noOfS; ++i) {
-		bool isValid = true;
+		system("CLS");
 
-		int a, b, c, d;
+		int UHF[4];
+		int LHF[4];
+		int PHF[4];
 
-		/*a = rand() % 10;
-		b = rand() % 10;
-		c = rand() % 10;
-		d = rand() % 10;*/
+		generateHashes(UHF, LHF, PHF);
 
-		d = i % 10;
-		c = i % 100 / 10;
-		b = i % 1000 / 100;
-		a = i / 1000;
+		HashFunctions h(UHF, LHF, PHF);
+		
+		std::cout << "\n----------------------------------------------------------------------------\n\n";
+		
+		solve.generateRoots(safes, h, rootGen, noOfS);
+		
+		io.printKeyFile(keyFilePath, h, safes);
 
-
-
-
-		Safe* s = new Safe(a, b, c, d);
-
-		//MULTI LOCK SAFE
-
-		for (int j = 0; j < 5 && isValid; ++j) {
-			//Lock* l = s->getCurrentLock();
-			Vec<Dial, 4>* Root = s->getCurrentLock()->getLock();
-			Vec<Dial, 4>* CNHash = s->getCurrentLock()->getCN();
-			Vec<Dial, 4>* LNHash = s->getCurrentLock()->getLN();
-			Vec<Dial, 4>* HNHash = s->getCurrentLock()->getHN();
-
-			isValid = h.hashRoot(Root, CNHash, LNHash, HNHash);
-
-			
-
-			if (j < 4) {
-				s->nextLockRoot();
-			}
-
-
-			
-
+		if (mode == 3) {
+			io.printMultiSafeFile(multiSafePath, safes);
+			consoleIO.outputMultiSafeSolutions(safes);
 		}
-
-		if (isValid) {
-			validSafe.push_back(s);	
-
+		else {
+			consoleIO.outputHashFunctions(h, safes.size());
 		}
-	}  
+	}
+	else if (2 == mode) {
+		string keyFilePath = consoleIO.inputFilePath();
+		string multiSafePath = consoleIO.inputFilePath();
+
+		HashFunctions* h;
+
+		io.readInKeyFile(keyFilePath, h, safes);
+
+		solve.solveRoots(safes, h);
+
+		io.printMultiSafeFile(multiSafePath, safes);
+		consoleIO.outputMultiSafeSolutions(safes);
+
+	}
+	else if (4 == mode) {
+		int noOfS = consoleIO.inputNoOfSolutions();
+		int rootGen = consoleIO.selectRandom();
+		string lockFilePath = consoleIO.inputFilePath();
 
 
+		int UHF[4];
+		int LHF[4];
+		int PHF[4];
+
+		generateHashes(UHF, LHF, PHF);
+
+		HashFunctions h(UHF, LHF, PHF);
+
+		std::cout << "\n----------------------------------------------------------------------------\n\n";
+
+		solve.generateRoots(safes, h, rootGen, noOfS);
+
+		io.printLockFile(lockFilePath, safes);
+		io.printKeyFile("keytesting.txt", h, safes);
 
 
+	}
+	else if (5 == mode) {
+		string lockFilePath = consoleIO.inputFilePath();
+		
+		io.readInLockFile(lockFilePath, safes);
+		
+		for (int i = 0; i < safes.size(); ++i) {
+			cout << "ROOT: " << safes[i]->getLockAt(0)->getLock()->getAt(0).getEntry()
+				<< safes[i]->getLockAt(0)->getLock()->getAt(1).getEntry()
+				<< safes[i]->getLockAt(0)->getLock()->getAt(2).getEntry()
+				<< safes[i]->getLockAt(0)->getLock()->getAt(3).getEntry() << std::endl;
 
-
-
-
-
-
-
-
-
-
-
-
-
-		//TODO: THINGS THAT NEED TO BE MOVED
-
-
-
-
-		//CONSOLE PRINTING
-
-	for (int i = 0; i < validSafe.size(); ++i){
-		std::cout << "\tSolution " << i+1 << std::endl << std::endl;
-
-		std::cout << "\tROOT:\t" << validSafe[i]->getLockAt(0)->getLock()->getAt(0).getEntry()
-		<< validSafe[i]->getLockAt(0)->getLock()->getAt(1).getEntry()
-		<< validSafe[i]->getLockAt(0)->getLock()->getAt(2).getEntry()
-		<< validSafe[i]->getLockAt(0)->getLock()->getAt(3).getEntry() << std::endl;
-
-				for (int j = 0; j < 5; ++j) {
-					std::cout << "\tCN" << j << ":";
-					for (int k = 0; k < 4; k++)
-						std::cout << validSafe[i]->getLockAt(j)->getCN()->getAt(k).getEntry();
-					std::cout << "\t"; //<< std::endl;
-
-					std::cout << "LN" << j << ":";
-					for (int k = 0; k < 4; k++)
- 						std::cout << validSafe[i]->getLockAt(j)->getLN()->getAt(k).getEntry();
-					std::cout << "\t"; //<< std::endl;
-
-					std::cout << "HN" << j << ":";
-					for (int k = 0; k < 4; k++)
-						std::cout << validSafe[i]->getLockAt(j)->getHN()->getAt(k).getEntry();
-					std::cout << std::endl;
-				}
-
-				
-				
-				/*
-				cout << "ROOT:\t";
-				for(int i = 0; i < 4; ++i)
-					cout << NS1.root[i];
+			for (int j = 0; j < 5; ++j)
+			{
+				cout << "LN" << j << ": ";
+				for (int k = 0; k < 4; ++k)
+					cout << safes[i]->getLockAt(j)->getLN()->getAt(k).getEntry() << " ";
 				cout << endl;
-				
-				
-				*/
-
-
-				std::cout << "\n----------------------------------------------------------------------------\n\n";
-			
 			}
+
+			cout << endl;
 
 		
+		}
+		
+		
+		
+	}
 
-	std::cout << "Total Number of Solutions: " << validSafe.size();
+	//Generating the keys
+
+	//for generating roots for that hash
+	
+	//CONSOLE PRINTING
 	
 
-
-
-
-	//FILE IO	
-	//TODO: Move into a seperate file
-
-	FileIO io;
-
-	io.printKeyFile("key_file(test).txt", h, validSafe);
-
-	io.printMultiSafeFile("multi_safe(test).txt", validSafe);
-
-
-	for(int i = 0; i < validSafe.size(); ++i)
+	for(unsigned int i = 0; i < safes.size(); ++i)
 	{
-		delete validSafe[i];
-		validSafe[i] = NULL;
+		delete safes[i];
+		safes[i] = NULL;
 	}
+	
+	int exit;
+	cin >> exit;
 	
 	return 0;
 }
@@ -171,21 +149,10 @@ int main() {
 
 void generateHashes(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4]) {
 
-	UHF[0] = rand() % 10;
-	UHF[1] = rand() % 10;
-	UHF[2] = rand() % 10;
-	UHF[3] = rand() % 10;
-
-	if (rand() % 2 == 0)
-		UHF[0] = -UHF[0];
-	if (rand() % 2 == 0)
-		UHF[1] = -UHF[1];
-	if (rand() % 2 == 0)
-		UHF[2] = -UHF[2];
-	if (rand() % 2 == 0)
-		UHF[3] = -UHF[3];
-
-	std::cout << "UHF:\t" << UHF[0] << ", " << UHF[1] << ", " << UHF[2] << ", " << UHF[3] << std::endl;
+	UHF[0] = rand() % 19 - 9;
+	UHF[1] = rand() % 19 - 9;
+	UHF[2] = rand() % 19 - 9;
+	UHF[3] = rand() % 19 - 9;
 
 
 	LHF[0] = rand() % 19 - 9;
@@ -193,13 +160,59 @@ void generateHashes(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4]) {
 	LHF[2] = rand() % 19 - 9;
 	LHF[3] = rand() % 19 - 9;
 
-	std::cout << "LHF:\t" << LHF[0] << ", " << LHF[1] << ", " << LHF[2] << ", " << LHF[3] << std::endl;
 
 	PHF[0] = rand() % 19 - 9;
 	PHF[1] = rand() % 19 - 9;
 	PHF[2] = rand() % 19 - 9;
 	PHF[3] = rand() % 19 - 9;
 
-	std::cout << "PHF:\t" << PHF[0] << ", " << PHF[1] << ", " << PHF[2] << ", " << PHF[3] << std::endl;
 
 }
+
+
+
+
+
+//Old algorithm
+//for (int i = 0; i < noOfS; ++i) {
+	//	bool isValid = true;
+
+	//	int a, b, c, d;
+
+	//	/*a = rand() % 10;
+	//	b = rand() % 10;
+	//	c = rand() % 10;
+	//	d = rand() % 10;*/
+
+	//	d = i % 10;
+	//	c = i % 100 / 10;
+	//	b = i % 1000 / 100;
+	//	a = i / 1000;
+
+
+	//	Safe* s = new Safe(a, b, c, d);
+
+	//	//MULTI LOCK SAFE
+
+	//	for (int j = 0; j < 5 && isValid; ++j) {
+	//		Vec<Dial, 4>* Root = s->getCurrentLock()->getLock();
+	//		Vec<Dial, 4>* CNHash = s->getCurrentLock()->getCN();
+	//		Vec<Dial, 4>* LNHash = s->getCurrentLock()->getLN();
+	//		Vec<Dial, 4>* HNHash = s->getCurrentLock()->getHN();
+
+	//		isValid = h.hashRoot(Root, CNHash, LNHash, HNHash);
+
+	//		
+
+	//		if (j < 4) {
+	//			s->nextLockRoot();
+	//		}
+	//					
+
+	//	}
+
+	//	if (isValid) {
+	//		validSafe.push_back(s);	
+
+	//	}
+	//} 
