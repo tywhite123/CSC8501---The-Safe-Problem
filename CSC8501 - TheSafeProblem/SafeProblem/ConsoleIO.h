@@ -20,8 +20,10 @@ public:
 
 
 
-	void outputHashFunctions(HashFunctions &h, int solutions);
+	void outputHashFunctions(HashFunctions *&h, int solutions);
 	void outputMultiSafeSolutions(vector<Safe*>& safes);
+	void outputLockSolution(HashFunctions*& h, vector<Safe*>&safes);
+
 
 };
 

@@ -9,6 +9,10 @@ Dial::Dial()
 
 Dial::Dial(int start) : entry(start)
 {
+	if (start < 0) {
+		start = 10 - start;
+	}
+
 	//TODO: Checks on the entry
 
 }

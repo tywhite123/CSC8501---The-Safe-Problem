@@ -18,7 +18,7 @@ int ConsoleIO::selectMode()
 	cout
 		<< "1. Generate Key File\n"
 		<< "2. Generate Multi Safe File\n"
-		<< "3. Generate Key and Multi Safe Files"
+		<< "3. Generate Key and Multi Safe Files\n"
 		<< "4. Generate Lock File\n"
 		<< "5. Read Lock File\n"
 		<< "6. Exit\n";
@@ -69,11 +69,11 @@ string ConsoleIO::inputFilePath()
 	return filepath;
 }
 
-void ConsoleIO::outputHashFunctions(HashFunctions & h, int solutions)
+void ConsoleIO::outputHashFunctions(HashFunctions *& h, int solutions)
 {
-	cout << "UHF:\t" << h.getUHF().getAt(0) << ", " << h.getUHF().getAt(1) << ", " << h.getUHF().getAt(2) << ", " << h.getUHF().getAt(3) << endl;
-	cout << "LHF:\t" << h.getLHF().getAt(0) << ", " << h.getLHF().getAt(1) << ", " << h.getLHF().getAt(2) << ", " << h.getLHF().getAt(3) << endl;
-	cout << "PHF:\t" << h.getPHF().getAt(0) << ", " << h.getPHF().getAt(1) << ", " << h.getPHF().getAt(2) << ", " << h.getPHF().getAt(3) << endl;
+	cout << "UHF:\t" << h->getUHF().getAt(0) << ", " << h->getUHF().getAt(1) << ", " << h->getUHF().getAt(2) << ", " << h->getUHF().getAt(3) << endl;
+	cout << "LHF:\t" << h->getLHF().getAt(0) << ", " << h->getLHF().getAt(1) << ", " << h->getLHF().getAt(2) << ", " << h->getLHF().getAt(3) << endl;
+	cout << "PHF:\t" << h->getPHF().getAt(0) << ", " << h->getPHF().getAt(1) << ", " << h->getPHF().getAt(2) << ", " << h->getPHF().getAt(3) << endl;
 
 	cout << "Number of Solutions found with this Hash: " << solutions << endl;
 
@@ -117,4 +117,14 @@ void ConsoleIO::outputMultiSafeSolutions(vector<Safe*>& safes)
 
 	std::cout << "Total Number of Solutions: " << safes.size();
 
+}
+
+void ConsoleIO::outputLockSolution(HashFunctions *& h, vector<Safe*>& safes)
+{
+
+	cout << "UHF:\t" << h->getUHF().getAt(0) << ", " << h->getUHF().getAt(1) << ", " << h->getUHF().getAt(2) << ", " << h->getUHF().getAt(3) << endl;
+	cout << "LHF:\t" << h->getLHF().getAt(0) << ", " << h->getLHF().getAt(1) << ", " << h->getLHF().getAt(2) << ", " << h->getLHF().getAt(3) << endl;
+	cout << "PHF:\t" << h->getPHF().getAt(0) << ", " << h->getPHF().getAt(1) << ", " << h->getPHF().getAt(2) << ", " << h->getPHF().getAt(3) << endl;
+
+	cout << "Number of Solutions found with this Hash: " << safes.size() << endl;
 }

@@ -14,7 +14,7 @@ public:
 	FileIO();
 	~FileIO();
 
-	void printKeyFile(string filepath, HashFunctions& h, vector<Safe*>& safes);
+	void printKeyFile(string filepath, HashFunctions*& h, vector<Safe*>& safes);
 	void printMultiSafeFile(string filepath, vector<Safe*>& safes);
 	void printLockFile(string filepath, vector<Safe*>& safes);
 

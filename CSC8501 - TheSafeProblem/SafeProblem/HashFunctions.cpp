@@ -21,20 +21,20 @@ HashFunctions::HashFunctions()
 	PHF.insert(rand() % 19 - 9);
 	PHF.insert(rand() % 19 - 9);
 
-	std::cout << "UHF (Hash Func Class): ";
-	for (int i = 0; i < 4; ++i)
-		std::cout << UHF.getAt(i);
-	std::cout << std::endl;	
+	//std::cout << "UHF (Hash Func Class): ";
+	//for (int i = 0; i < 4; ++i)
+	//	std::cout << UHF.getAt(i);
+	//std::cout << std::endl;	
 
-	std::cout << "LHF (Hash Func Class): ";
-	for (int i = 0; i < 4; ++i)
-		std::cout << LHF.getAt(i);
-	std::cout << std::endl;
+	//std::cout << "LHF (Hash Func Class): ";
+	//for (int i = 0; i < 4; ++i)
+	//	std::cout << LHF.getAt(i);
+	//std::cout << std::endl;
 
-	std::cout << "PHF (Hash Func Class): ";
-	for (int i = 0; i < 4; ++i)
-		std::cout << PHF.getAt(i);
-	std::cout << std::endl;
+	//std::cout << "PHF (Hash Func Class): ";
+	//for (int i = 0; i < 4; ++i)
+	//	std::cout << PHF.getAt(i);
+	//std::cout << std::endl;
 
 }
 
@@ -70,6 +70,7 @@ bool HashFunctions::hashRoot(Vec<Dial, 4>*& Root, Vec<Dial, 4>*&CN, Vec<Dial, 4>
 			}
 		}
 	}
+	
 
 	/*std::cout << CN.getAt(0).getEntry()
 		<< CN.getAt(1).getEntry()

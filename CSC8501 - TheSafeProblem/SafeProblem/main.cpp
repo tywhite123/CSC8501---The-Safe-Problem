@@ -44,7 +44,7 @@ int main() {
 
 		generateHashes(UHF, LHF, PHF);
 
-		HashFunctions h(UHF, LHF, PHF);
+		HashFunctions* h;
 		
 		std::cout << "\n----------------------------------------------------------------------------\n\n";
 		
@@ -86,11 +86,13 @@ int main() {
 
 		generateHashes(UHF, LHF, PHF);
 
-		HashFunctions h(UHF, LHF, PHF);
+		HashFunctions* h;
 
 		std::cout << "\n----------------------------------------------------------------------------\n\n";
 
 		solve.generateRoots(safes, h, rootGen, noOfS);
+
+		consoleIO.outputMultiSafeSolutions(safes);
 
 		io.printLockFile(lockFilePath, safes);
 		io.printKeyFile("keytesting.txt", h, safes);
@@ -101,6 +103,8 @@ int main() {
 		string lockFilePath = consoleIO.inputFilePath();
 		
 		io.readInLockFile(lockFilePath, safes);
+
+		HashFunctions* h;
 		
 		for (int i = 0; i < safes.size(); ++i) {
 			cout << "ROOT: " << safes[i]->getLockAt(0)->getLock()->getAt(0).getEntry()
@@ -121,7 +125,18 @@ int main() {
 		
 		}
 		
-		
+		solve.solveLocks(safes, h);
+
+
+
+		consoleIO.outputLockSolution(h, safes);
+/*
+		io.printKeyFile("key(fromLock).txt", *h, safes);
+		io.printMultiSafeFile("multi(fromLock).txt", safes);*/
+
+
+
+
 		
 	}
 

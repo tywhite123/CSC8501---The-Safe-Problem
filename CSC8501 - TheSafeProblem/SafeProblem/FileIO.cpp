@@ -13,7 +13,7 @@ FileIO::~FileIO()
 {
 }
 
-void FileIO::printKeyFile(string filepath, HashFunctions & h, vector<Safe*>& validSafe)
+void FileIO::printKeyFile(string filepath, HashFunctions *& h, vector<Safe*>& validSafe)
 {
 	std::ofstream keyFile(filepath);
 
@@ -27,20 +27,20 @@ void FileIO::printKeyFile(string filepath, HashFunctions & h, vector<Safe*>& val
 				<< validSafe[i]->getLockAt(0)->getLock()->getAt(2).getEntry()
 				<< validSafe[i]->getLockAt(0)->getLock()->getAt(3).getEntry() << std::endl;
 
-			keyFile << "UHF " << h.getUHF().getAt(0) << ","
-				<< h.getUHF().getAt(1) << ","
-				<< h.getUHF().getAt(2) << ","
-				<< h.getUHF().getAt(3) << std::endl;
+			keyFile << "UHF " << h->getUHF().getAt(0) << ","
+				<< h->getUHF().getAt(1) << ","
+				<< h->getUHF().getAt(2) << ","
+				<< h->getUHF().getAt(3) << std::endl;
 
-			keyFile << "LHF " << h.getLHF().getAt(0) << ","
-				<< h.getLHF().getAt(1) << ","
-				<< h.getLHF().getAt(2) << ","
-				<< h.getLHF().getAt(3) << std::endl;
+			keyFile << "LHF " << h->getLHF().getAt(0) << ","
+				<< h->getLHF().getAt(1) << ","
+				<< h->getLHF().getAt(2) << ","
+				<< h->getLHF().getAt(3) << std::endl;
 
-			keyFile << "PHF " << h.getPHF().getAt(0) << ","
-				<< h.getPHF().getAt(1) << ","
-				<< h.getPHF().getAt(2) << ","
-				<< h.getPHF().getAt(3) << std::endl;
+			keyFile << "PHF " << h->getPHF().getAt(0) << ","
+				<< h->getPHF().getAt(1) << ","
+				<< h->getPHF().getAt(2) << ","
+				<< h->getPHF().getAt(3) << std::endl;
 		}
 	}
 

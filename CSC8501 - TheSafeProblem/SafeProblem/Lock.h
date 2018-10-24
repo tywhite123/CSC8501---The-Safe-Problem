@@ -14,6 +14,7 @@ public:
 
 	Dial getAt(int i) { return dials.getAt(i); }
 	Vec<Dial, 4>* getLock() { return &dials; }
+	void setLock(int a, int b, int c, int d);
 
 	Vec<Dial,4>* getCN() { return &CN; }
 	Vec<Dial, 4>* getLN() { return &LN; }

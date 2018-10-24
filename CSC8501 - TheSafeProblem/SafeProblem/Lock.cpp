@@ -43,4 +43,12 @@ Lock::~Lock()
 {
 }
 
+void Lock::setLock(int a, int b, int c, int d)
+{
+	dials.insert(Dial(a));
+	dials.insert(Dial(b));
+	dials.insert(Dial(c));
+	dials.insert(Dial(d));
+}
+
 
