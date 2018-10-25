@@ -2,6 +2,9 @@
 
 #pragma once
 #include <cstdarg>
+#include <vector>
+
+using namespace std;
 
 template <typename T, int N>
 
@@ -18,11 +21,13 @@ public:
 
 
 	void insert(T t);
-	int size() { return N; }
+	int size() { return store.size(); }
+	void resize(int n);
 
 
 private:
-	T store[N];
+	//T store[N];
+	vector<T> store;
 	int i = 0;
 };
 
@@ -32,6 +37,8 @@ private:
 template <typename T, int N>
 Vec<T,N>::Vec()
 {
+
+	store.resize(N);
 	i = 0;
 }
 
@@ -58,6 +65,8 @@ Vec<T,N>::~Vec()
 {
 }
 
+
+
 template<typename T, int N>
 void Vec<T, N>::insert(T t)
 {
@@ -65,6 +74,12 @@ void Vec<T, N>::insert(T t)
 		store[i] = t;
 		++i;
 	}
+}
+
+template<typename T, int N>
+void Vec<T, N>::resize(int n)
+{
+	store.resize(n);
 }
 
 

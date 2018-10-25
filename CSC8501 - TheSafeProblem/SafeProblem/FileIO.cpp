@@ -59,7 +59,7 @@ void FileIO::printMultiSafeFile(string filepath, vector<Safe*>& safes)
 		for(unsigned int i = 0; i < safes.size(); ++i)
 		{
 			
-			for(int j = 0; j < 5; ++j)
+			for(int j = 0; j < safes[i]->size(); ++j)
 			{
 				
 				multiSafeFile << "CN" << j << " ";
@@ -107,15 +107,15 @@ void FileIO::printLockFile(string filepath, vector<Safe*>& safes)
 		{
 
 			lockFile << "ROOT: " << safes[i]->getLockAt(0)->getLock()->getAt(0).getEntry()
-				<< safes[i]->getLockAt(0)->getLock()->getAt(1).getEntry()
-				<< safes[i]->getLockAt(0)->getLock()->getAt(2).getEntry()
-				<< safes[i]->getLockAt(0)->getLock()->getAt(3).getEntry() << std::endl;
+				<< " " << safes[i]->getLockAt(0)->getLock()->getAt(1).getEntry()
+				<< " " << safes[i]->getLockAt(0)->getLock()->getAt(2).getEntry()
+				<< " " << safes[i]->getLockAt(0)->getLock()->getAt(3).getEntry() << std::endl;
 
-			for (int j = 0; j < 5; ++j)
+			for (int j = 0; j < safes[i]->size(); ++j)
 			{
-				lockFile << "LN" << j << ": ";
+				lockFile << "LN" << j << ":";
 				for (int k = 0; k < 4; ++k)
-					lockFile << safes[i]->getLockAt(j)->getLN()->getAt(k).getEntry() << " ";
+					lockFile << " " << safes[i]->getLockAt(j)->getLN()->getAt(k).getEntry();
 				lockFile << endl;
 			}
 
@@ -131,7 +131,7 @@ void FileIO::printLockFile(string filepath, vector<Safe*>& safes)
 
 }
 
-void FileIO::readInKeyFile(string filepath, HashFunctions *& h, vector<Safe*>& safes)
+void FileIO::readInKeyFile(string filepath, HashFunctions *& h, vector<Safe*>& safes) throw (exception)
 {
 	//TODO: REGEX FOR READING A KEY FILE
 	//[0-9]+|[0-9 ]+ (For reading root)
@@ -244,12 +244,15 @@ void FileIO::readInKeyFile(string filepath, HashFunctions *& h, vector<Safe*>& s
 
 					}*/
 
-				
-
 
 			}
 			else {
-				//TODO: THROW EXCEPTION
+				for (int i = 0; i < (int)safes.size(); ++i)
+					delete safes[i];
+				if (h != nullptr)
+					delete h;
+				throw exception("Not a valid file");
+				
 			}
 
 		}
@@ -260,13 +263,13 @@ void FileIO::readInKeyFile(string filepath, HashFunctions *& h, vector<Safe*>& s
 
 }
 
-void FileIO::readInLockFile(string filepath, vector<Safe*>& safes)
+void FileIO::readInLockFile(string filepath, vector<Safe*>& safes, int size)
 {
-	regex root("(ROOT:) [0-9]+|[0-9 ]+");
+	regex root("(ROOT:) ([0-9] ?)+");
 	regex lock("(LN[0-9]: )([0-9] ?)+");
+	regex amount("LN[0-9]:");
 
 	fstream lockFile(filepath);
-
 
 	if (lockFile) {
 		string line;
@@ -275,27 +278,29 @@ void FileIO::readInLockFile(string filepath, vector<Safe*>& safes)
 
 		while (getline(lockFile, line)) {
 
-			int a, b, c, d;
-
 			if (regex_match(line, root)) {
 
 				stringstream split(line);
+				int safeRoot[4];
+				int i = 0;
 				while (split.good()) {
 					string substr;
 					getline(split, substr, ' ');
 					if (substr != "ROOT:") {
 						int value = stoi(substr);
 
-						d = value % 10;
+					/*	d = value % 10;
 						c = value / 10 % 10;
 						b = value / 100 % 10;
-						a = value / 1000 % 10;
+						a = value / 1000 % 10;*/
 
-						safes.push_back(new Safe(a, b, c, d));
+						safeRoot[i] = value;
+						++i;
 
 					}
 
 				}
+				safes.push_back(new Safe(safeRoot[0], safeRoot[1], safeRoot[2], safeRoot[3], size));
 
 			}
 			else if (regex_match(line, lock)) {
@@ -303,7 +308,7 @@ void FileIO::readInLockFile(string filepath, vector<Safe*>& safes)
 				while (split.good()) {
 					string substr;
 					getline(split, substr, ' ');
-					if (substr != "LN0:" && substr != "LN1:" && substr != "LN2:" && substr != "LN3:" && substr != "LN4:") {
+					if (!regex_match(substr, amount)) {
 						int value = stoi(substr);
 						safes[currentSafe]->getCurrentLock()->getLN()->insert(Dial(value));
 					}
@@ -312,7 +317,7 @@ void FileIO::readInLockFile(string filepath, vector<Safe*>& safes)
 				
 				
 
-				if (safes[currentSafe]->whichLock() >= 4)
+				if (safes[currentSafe]->whichLock() >= size - 1)
 					++currentSafe;
 				else
 					safes[currentSafe]->nextLock();

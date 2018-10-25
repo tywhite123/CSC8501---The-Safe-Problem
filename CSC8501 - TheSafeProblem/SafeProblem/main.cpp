@@ -5,16 +5,10 @@
 #include <time.h>
 
 
-
-
-void generateHashes(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4]);
-
-
 int main() {
 	
 	
-	
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	
 	
 	
@@ -23,7 +17,7 @@ int main() {
 	ProblemSolver solve;
 
 	
-
+	HashFunctions* h = nullptr;
 	std::vector<Safe*> safes;
 
 	int mode = consoleIO.selectMode();
@@ -38,17 +32,19 @@ int main() {
 
 		system("CLS");
 
-		int UHF[4];
-		int LHF[4];
-		int PHF[4];
-
-		generateHashes(UHF, LHF, PHF);
-
-		HashFunctions* h;
 		
 		std::cout << "\n----------------------------------------------------------------------------\n\n";
 		
 		solve.generateRoots(safes, h, rootGen, noOfS);
+
+		noOfS = consoleIO.confirmAmount(safes);
+
+		if (noOfS < (int)safes.size()) {
+			for (int i = noOfS; i < (int)safes.size(); ++i) {
+				delete safes[i];
+			}
+			safes.resize(noOfS);
+		}
 		
 		io.printKeyFile(keyFilePath, h, safes);
 
@@ -64,14 +60,19 @@ int main() {
 		string keyFilePath = consoleIO.inputFilePath();
 		string multiSafePath = consoleIO.inputFilePath();
 
-		HashFunctions* h;
+		try {
+			io.readInKeyFile(keyFilePath, h, safes);
+			
+			solve.solveRoots(safes, h);
 
-		io.readInKeyFile(keyFilePath, h, safes);
+			io.printMultiSafeFile(multiSafePath, safes);
+			consoleIO.outputMultiSafeSolutions(safes);
+		}
+		catch (exception& e) {
+			cout << e.what() << endl;
+		}
 
-		solve.solveRoots(safes, h);
-
-		io.printMultiSafeFile(multiSafePath, safes);
-		consoleIO.outputMultiSafeSolutions(safes);
+		
 
 	}
 	else if (4 == mode) {
@@ -79,18 +80,18 @@ int main() {
 		int rootGen = consoleIO.selectRandom();
 		string lockFilePath = consoleIO.inputFilePath();
 
-
-		int UHF[4];
-		int LHF[4];
-		int PHF[4];
-
-		generateHashes(UHF, LHF, PHF);
-
-		HashFunctions* h;
-
 		std::cout << "\n----------------------------------------------------------------------------\n\n";
 
 		solve.generateRoots(safes, h, rootGen, noOfS);
+
+		noOfS = consoleIO.confirmAmount(safes);
+
+		if (noOfS < (int)safes.size()) {
+			for (int i = noOfS; i < (int)safes.size(); ++i) {
+				delete safes[i];
+			}
+			safes.resize(noOfS);
+		}
 
 		consoleIO.outputMultiSafeSolutions(safes);
 
@@ -101,60 +102,35 @@ int main() {
 	}
 	else if (5 == mode) {
 		string lockFilePath = consoleIO.inputFilePath();
-		
-		io.readInLockFile(lockFilePath, safes);
+		int locksPerSafe = consoleIO.inputNoOfLocks();
 
-		HashFunctions* h;
-		
-		for (int i = 0; i < safes.size(); ++i) {
-			cout << "ROOT: " << safes[i]->getLockAt(0)->getLock()->getAt(0).getEntry()
-				<< safes[i]->getLockAt(0)->getLock()->getAt(1).getEntry()
-				<< safes[i]->getLockAt(0)->getLock()->getAt(2).getEntry()
-				<< safes[i]->getLockAt(0)->getLock()->getAt(3).getEntry() << std::endl;
 
-			for (int j = 0; j < 5; ++j)
-			{
-				cout << "LN" << j << ": ";
-				for (int k = 0; k < 4; ++k)
-					cout << safes[i]->getLockAt(j)->getLN()->getAt(k).getEntry() << " ";
-				cout << endl;
-			}
+		io.readInLockFile(lockFilePath, safes, locksPerSafe);
 
-			cout << endl;
+		bool valid = solve.solveLocks(safes, h);
 
-		
+
+		if (valid) {
+			consoleIO.outputLockSolution(h, safes);
+
+			io.printKeyFile("key(fromLock).txt", h, safes);
+			io.printMultiSafeFile("multi(fromLock).txt", safes);
 		}
-		
-		solve.solveLocks(safes, h);
-
-
-
-		consoleIO.outputLockSolution(h, safes);
-/*
-		io.printKeyFile("key(fromLock).txt", *h, safes);
-		io.printMultiSafeFile("multi(fromLock).txt", safes);*/
-
-
-
-
+		else {
+			consoleIO.nothingFound();
+		}
 		
 	}
 
-	//Generating the keys
-
-	//for generating roots for that hash
-	
-	//CONSOLE PRINTING
-	
-
+	if(h != nullptr)
+		delete h;
 	for(unsigned int i = 0; i < safes.size(); ++i)
 	{
 		delete safes[i];
 		safes[i] = NULL;
 	}
 	
-	int exit;
-	cin >> exit;
+	consoleIO.endOfProgram();
 	
 	return 0;
 }
@@ -162,27 +138,27 @@ int main() {
 
 
 
-void generateHashes(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4]) {
-
-	UHF[0] = rand() % 19 - 9;
-	UHF[1] = rand() % 19 - 9;
-	UHF[2] = rand() % 19 - 9;
-	UHF[3] = rand() % 19 - 9;
-
-
-	LHF[0] = rand() % 19 - 9;
-	LHF[1] = rand() % 19 - 9;
-	LHF[2] = rand() % 19 - 9;
-	LHF[3] = rand() % 19 - 9;
-
-
-	PHF[0] = rand() % 19 - 9;
-	PHF[1] = rand() % 19 - 9;
-	PHF[2] = rand() % 19 - 9;
-	PHF[3] = rand() % 19 - 9;
-
-
-}
+//void generateHashes(int(&UHF)[4], int(&LHF)[4], int(&PHF)[4]) {
+//
+//	UHF[0] = rand() % 19 - 9;
+//	UHF[1] = rand() % 19 - 9;
+//	UHF[2] = rand() % 19 - 9;
+//	UHF[3] = rand() % 19 - 9;
+//
+//
+//	LHF[0] = rand() % 19 - 9;
+//	LHF[1] = rand() % 19 - 9;
+//	LHF[2] = rand() % 19 - 9;
+//	LHF[3] = rand() % 19 - 9;
+//
+//
+//	PHF[0] = rand() % 19 - 9;
+//	PHF[1] = rand() % 19 - 9;
+//	PHF[2] = rand() % 19 - 9;
+//	PHF[3] = rand() % 19 - 9;
+//
+//
+//}
 
 
 

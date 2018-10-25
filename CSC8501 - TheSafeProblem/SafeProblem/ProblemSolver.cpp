@@ -52,7 +52,7 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 
 			//MULTI LOCK SAFE
 
-			for (int j = 0; j < 5 && isValid; ++j) {
+			for (int j = 0; j < s->size() && isValid; ++j) {
 				Vec<Dial, 4>* Root = s->getCurrentLock()->getLock();
 				Vec<Dial, 4>* CNHash = s->getCurrentLock()->getCN();
 				Vec<Dial, 4>* LNHash = s->getCurrentLock()->getLN();
@@ -77,6 +77,10 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 				safes.push_back(s);
 
 			}
+			else {
+				delete s;
+				s = nullptr;
+			}
 			if (2 == rootGen)
 				i++;
 
@@ -86,11 +90,21 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 
 		}
 		
-		h = test;
-		if (validSolutions < noOfSolutions)
+		
+		if (validSolutions < noOfSolutions) {
 			delete test;
-
-		cout << "Valid Solutions: " << validSolutions << endl;
+			test = nullptr;
+			for (int t = 0; t < (int)safes.size(); ++t) {
+				delete safes[t];
+				safes[t] = nullptr;
+			}
+		}
+		else {
+			h = test;
+		}
+		
+		if(validSolutions > 0)
+			cout << "Valid Solutions: " << validSolutions << endl;
 	}
 
 	
@@ -103,7 +117,7 @@ void ProblemSolver::solveRoots(vector<Safe*>& safes, HashFunctions *& h)
 
 	for (unsigned int i = 0; i < safes.size(); ++i) {
 		bool isValid = true;
-		for (int j = 0; j < 5; ++j) {
+		for (int j = 0; j < safes[i]->size(); ++j) {
 			Vec<Dial, 4>* Root = safes[i]->getCurrentLock()->getLock();
 			Vec<Dial, 4>* CNHash = safes[i]->getCurrentLock()->getCN();
 			Vec<Dial, 4>* LNHash = safes[i]->getCurrentLock()->getLN();
@@ -123,7 +137,7 @@ void ProblemSolver::solveRoots(vector<Safe*>& safes, HashFunctions *& h)
 
 }
 
-void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
+bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 {
 	int combinedHF[4];
 	int uhfAndLhf[4];
@@ -132,6 +146,7 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 	int lhf[4];
 
 	vector<Vec<Dial,4>> testCNs;
+	vector<vector<int>> candidateUHFs;
 
 
 	for (int i = 0; i < 4; ++i) {
@@ -140,16 +155,6 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 			safes[0]->getLockAt(0)->getLN()->getAt(i).getEntry();
 	}
 
-	cout << "HASHES:\n";
-
-
-	cout << "COMBINED:\t";
-	for (int i = 0; i < 4; ++i)
-		cout << combinedHF[i] << " ";
-
-
-	cout << endl;
-
 	for (int i = 0; i < 4; ++i) {
 		uhfAndLhf[i] =
 			safes[0]->getLockAt(0)->getLN()->getAt(i).getEntry()-
@@ -157,27 +162,14 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 	}
 
 
-	cout << "UHF + LHF:\t";
-	for (int i = 0; i < 4; ++i)
-		cout << uhfAndLhf[i] << " ";
-
-	cout << endl;
-
-
 	for (int i = 0; i < 4; ++i) {
 		phf[i] = combinedHF[i] - uhfAndLhf[i];
 	}
 
 
-	cout << "PHF:\t\t";
-	for (int i = 0; i < 4; ++i)
-		cout << phf[i] << " ";
-	
-	cout << endl;
-
 
 	for (unsigned int i = 0; i < safes.size(); ++i) {
-		for (int j = 0; j < 5; ++j) {
+		for (int j = 0; j < safes[i]->size(); ++j) {
 			for (int k = 0; k < 4; ++k) {
 				int test = (safes[i]->getLockAt(j)->getLN()->getAt(k).getEntry() + phf[k]) % 10;
 				if (test < 0)
@@ -190,16 +182,14 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 		}
 		
 	}
-
+/*
 	bool finished = false;
-	while (!finished) {
+	while (!finished) {*/
 
 
 		bool valid = true;
 		int t = 0;
-		while (/*valid && */t < 10000) {
-			/*for (int k = 0; k < 4; ++k)
-				uhf[k] = rand() % 19 - 9;*/
+		while (/*valid && *//*!finished &&*/ t < 10000) {
 			uhf[3] =  t % 10;
 			uhf[2] =  t % 100 / 10;
 			uhf[1] =  t % 1000 / 100;
@@ -207,7 +197,7 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 
 			
 
-			for (int i = 0; i < safes.size(); ++i) {
+			for (int i = 0; i < (int)safes.size(); ++i) {
 				for (int j = 0; j < 5; ++j) {
 					Vec<Dial, 4> cn;
 					for (int k = 0; k < 4; ++k) {
@@ -220,7 +210,7 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 				}
 			}
 
-			for (int i = 0; i < testCNs.size(); ++i) {
+			for (int i = 0; i < (int)testCNs.size(); ++i) {
 				for (int k = 0; k < 3; ++k) {
 					for (int j = k + 1; j < 4; ++j) {
 						if (testCNs[i].getAt(k).getEntry() == testCNs[i].getAt(j).getEntry()) {
@@ -231,7 +221,7 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 			}
 
 			if (valid) {
-				for (int i = 0; i < testCNs.size() && valid; ++i) {
+				for (int i = 0; i < (int)testCNs.size() && valid; ++i) {
 					int left = 0;
 					int right = 0;
 
@@ -252,7 +242,7 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 
 				if (valid) {
 					int total = 0;
-					for (int i = 0; i < testCNs.size() && valid; ++i) {
+					for (int i = 0; i < (int)testCNs.size() && valid; ++i) {
 						for (int j = 0; j < 4; ++j)
 							total += testCNs[i].getAt(j).getEntry();
 					}
@@ -264,15 +254,11 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 				}
 			}
 
-
-
 			if (valid) {
-				finished = true;
-				cout << "UHF:\t\t";
+				vector<int> uhfToEnter;
 				for (int i = 0; i < 4; ++i)
-					cout << uhf[i] << " ";
-
-				cout << endl;
+					uhfToEnter.push_back(uhf[i]);
+				candidateUHFs.push_back(uhfToEnter);
 			}
 			else {
 				testCNs.clear();
@@ -283,36 +269,54 @@ void ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 
 		}
 
-	}
+		if (candidateUHFs.size() <= 0)
+			valid = false;
 
-
-	//for (unsigned int i = 0; i < safes.size(); ++i) {
-	//	for (int j = i*5; j < (i*5)+5; ++j) {
-	//		for (int k = 0; k < 4; ++k)
-	//			safes[i]->getLockAt(j%5)->getCN()->insert(Dial(testCNs[j].getAt(k).getEntry()));
-	//	}
 	//}
 
-	cout << "UHF:\t\t";
-	for (int i = 0; i < 4; ++i)
-		cout << uhf[i] << " ";
+		if (valid) {
 
-	cout << endl;
-
-
-	//for (int i = 0; i < 4; ++i) {
-	//	lhf[i] = (uhfAndLhf[i] - uhf[i])%10;
-	//}
-
-	//cout << "LHF:\t\t";
-	//for (int i = 0; i < 4; ++i)
-	//	cout << lhf[i] << " ";
-
-	//cout << endl;
-
-	//h = new HashFunctions(uhf, lhf, phf);
+			if (candidateUHFs.size() > 1) {
+				int selected = io.confirmCandidateUHF(candidateUHFs);
+				for (int i = 0; i < 4; ++i)
+					uhf[i] = candidateUHFs[selected].at(i);
+			}
+			else {
+				for (int i = 0; i < 4; ++i)
+					uhf[i] = candidateUHFs[0].at(i);
+			}
 
 
+			testCNs.clear();
+			for (int i = 0; i < (int)safes.size(); ++i) {
+				for (int j = 0; j < safes[i]->size(); ++j) {
+					Vec<Dial, 4> cn;
+					for (int k = 0; k < 4; ++k) {
+						if (j == 0)
+							cn.insert((safes[i]->getLockAt(j)->getLock()->getAt(k).getEntry() + uhf[k]) % 10);
+						else
+							cn.insert((safes[i]->getLockAt(j - 1)->getHN()->getAt(k).getEntry() + uhf[k]) % 10);
+					}
+					testCNs.push_back(cn);
+				}
+			}
+
+			for (int i = 0; i < (int)safes.size(); ++i) {
+				for (int j = i * safes[i]->size(); j < (i * safes[i]->size()) + safes[i]->size(); ++j) {
+					for (int k = 0; k < 4; ++k)
+						safes[i]->getLockAt(j % safes[i]->size())->getCN()->insert(Dial(testCNs[j].getAt(k).getEntry()));
+				}
+			}
+
+
+			for (int i = 0; i < 4; ++i) {
+				lhf[i] = (uhfAndLhf[i] - uhf[i]) % 10;
+			}
+
+			h = new HashFunctions(uhf, lhf, phf);
+		}
+
+		return valid;
 }
 
 bool ProblemSolver::bonusCheck(Safe *& s)
@@ -336,7 +340,7 @@ bool ProblemSolver::bonusCheck(Safe *& s)
 
 	if (valid) {
 		int total = 0;
-		for (int i = 0; i < 5 && valid; ++i) {
+		for (int i = 0; i < s->size() && valid; ++i) {
 			for (int j = 0; j < 4; ++j)
 				total += s->getLockAt(i)->getCN()->getAt(j).getEntry();
 		}

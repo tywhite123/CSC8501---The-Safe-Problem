@@ -2,6 +2,7 @@
 #include<vector>
 #include "Safe.h"
 #include "HashFunctions.h"
+#include "ConsoleIO.h"
 
 using namespace std;
 
@@ -16,11 +17,12 @@ public:
 
 	void solveRoots(vector<Safe*>& safes, HashFunctions*& h);
 
-	void solveLocks(vector<Safe*>& safes, HashFunctions*& h);
+	bool solveLocks(vector<Safe*>& safes, HashFunctions*& h);
 
 	bool bonusCheck(Safe *&s);
 
 
-
+private :
+	ConsoleIO io;
 };
 

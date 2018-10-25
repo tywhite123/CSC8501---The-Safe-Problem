@@ -19,7 +19,7 @@ public:
 	void printLockFile(string filepath, vector<Safe*>& safes);
 
 	void readInKeyFile(string filepath, HashFunctions *&h, vector<Safe*>& safes);
-	void readInLockFile(string filepath, vector<Safe*>& safes);
+	void readInLockFile(string filepath, vector<Safe*>& safes, int size);
 
 
 

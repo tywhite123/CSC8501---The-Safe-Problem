@@ -22,6 +22,8 @@ Lock::Lock(int a, int b, int c, int d)
 	//dials[2] = Dial(c);
 	//dials[3] = Dial(d);
 
+	dials = Vec<Dial, 4>();
+
 	dials.insert(Dial(a));
 	dials.insert(Dial(b));
 	dials.insert(Dial(c));

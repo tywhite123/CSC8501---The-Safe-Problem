@@ -4,6 +4,15 @@
 
 Safe::Safe(int a, int b, int c, int d)
 {
+	locks = Vec<Lock*, 5>();
+	locks.insert(new Lock(a, b, c, d));
+	
+}
+
+Safe::Safe(int a, int b, int c, int d, int size)
+{
+	locks = Vec<Lock*, 5>();
+	locks.resize(size);
 	locks.insert(new Lock(a, b, c, d));
 }
 
