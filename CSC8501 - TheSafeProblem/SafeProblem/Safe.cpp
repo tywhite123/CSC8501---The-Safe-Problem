@@ -19,7 +19,7 @@ Safe::Safe(int a, int b, int c, int d, int size)
 
 Safe::~Safe()
 {
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < locks.size(); ++i)
 		delete locks.getAt(i);
 }
 

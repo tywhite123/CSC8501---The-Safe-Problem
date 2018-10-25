@@ -19,6 +19,7 @@ public:
 	string inputFilePath();
 	int confirmAmount(vector<Safe*>&safes);
 	int inputNoOfLocks();
+	int bonusValidation();
 
 	int confirmCandidateUHF(vector<vector<int>> candidateUHF);
 	void nothingFound();

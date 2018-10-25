@@ -13,11 +13,11 @@ public:
 	~ProblemSolver();
 
 
-	void generateRoots(vector<Safe*>& safes, HashFunctions*& h, int rootGen, int noOfSolutions);
+	void generateRoots(vector<Safe*>& safes, HashFunctions*& h, int rootGen, int noOfSolutions, int noOfLocks, int bonus);
 
 	void solveRoots(vector<Safe*>& safes, HashFunctions*& h);
 
-	bool solveLocks(vector<Safe*>& safes, HashFunctions*& h);
+	bool solveLocks(vector<Safe*>& safes, HashFunctions*& h, int bonus);
 
 	bool bonusCheck(Safe *&s);
 

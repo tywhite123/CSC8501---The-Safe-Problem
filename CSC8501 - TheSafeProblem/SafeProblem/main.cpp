@@ -25,6 +25,8 @@ int main() {
 	if (1 == mode || 3 == mode) {
 		int noOfS = consoleIO.inputNoOfSolutions();
 		int rootGen = consoleIO.selectRandom();
+		int locksPerSafe = consoleIO.inputNoOfLocks();
+		int bonus = consoleIO.bonusValidation();
 		string keyFilePath = consoleIO.inputFilePath();
 		string multiSafePath;
 		if (3 == mode)
@@ -35,7 +37,7 @@ int main() {
 		
 		std::cout << "\n----------------------------------------------------------------------------\n\n";
 		
-		solve.generateRoots(safes, h, rootGen, noOfS);
+		solve.generateRoots(safes, h, rootGen, noOfS, locksPerSafe, bonus);
 
 		noOfS = consoleIO.confirmAmount(safes);
 
@@ -78,11 +80,14 @@ int main() {
 	else if (4 == mode) {
 		int noOfS = consoleIO.inputNoOfSolutions();
 		int rootGen = consoleIO.selectRandom();
+		int locksPerSafe = consoleIO.inputNoOfLocks();
+		int bonus = consoleIO.bonusValidation();
 		string lockFilePath = consoleIO.inputFilePath();
+
 
 		std::cout << "\n----------------------------------------------------------------------------\n\n";
 
-		solve.generateRoots(safes, h, rootGen, noOfS);
+		solve.generateRoots(safes, h, rootGen, noOfS, locksPerSafe, bonus);
 
 		noOfS = consoleIO.confirmAmount(safes);
 
@@ -103,11 +108,12 @@ int main() {
 	else if (5 == mode) {
 		string lockFilePath = consoleIO.inputFilePath();
 		int locksPerSafe = consoleIO.inputNoOfLocks();
+		int bonus = consoleIO.bonusValidation();
 
 
 		io.readInLockFile(lockFilePath, safes, locksPerSafe);
 
-		bool valid = solve.solveLocks(safes, h);
+		bool valid = solve.solveLocks(safes, h, bonus);
 
 
 		if (valid) {

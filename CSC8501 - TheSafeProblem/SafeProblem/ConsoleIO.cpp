@@ -104,6 +104,21 @@ int ConsoleIO::inputNoOfLocks()
 	return noOfLocks;
 }
 
+int ConsoleIO::bonusValidation()
+{
+	int selected = 0;
+
+	cout
+		<< "Do you want bonus validation: \n"
+		<< "1. Normal\n"
+		<< "2. Bonus\n";
+	
+	while (selected <= 0 || selected > 2)
+		cin >> selected;
+
+	return selected;
+}
+
 int ConsoleIO::confirmCandidateUHF(vector<vector<int>> candidateUHF)
 {
 	cout << "Total Candidate UHFs: " << candidateUHF.size() << endl;

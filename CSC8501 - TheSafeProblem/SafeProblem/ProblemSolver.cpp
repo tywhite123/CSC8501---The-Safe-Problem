@@ -13,8 +13,9 @@ ProblemSolver::~ProblemSolver()
 
 
 
-void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int rootGen, int noOfSolutions)
+void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int rootGen, int noOfSolutions, int noOfLocks, int bonus)
 {
+
 
 	int validSolutions = 0;
 	
@@ -48,7 +49,7 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 			}
 
 
-			Safe* s = new Safe(a, b, c, d);
+			Safe* s = new Safe(a, b, c, d, noOfLocks);
 
 			//MULTI LOCK SAFE
 
@@ -63,14 +64,14 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 
 
 
-				if (j < 4) {
+				if (j < s->size() - 1) {
 					s->nextLockRoot();
 				}
 
 
 			}
 
-			if (isValid) isValid = bonusCheck(s);
+			if (isValid && bonus == 2) isValid = bonusCheck(s);
 
 			if (isValid) {
 				validSolutions++;
@@ -137,7 +138,7 @@ void ProblemSolver::solveRoots(vector<Safe*>& safes, HashFunctions *& h)
 
 }
 
-bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
+bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bonus)
 {
 	int combinedHF[4];
 	int uhfAndLhf[4];
@@ -198,7 +199,7 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 			
 
 			for (int i = 0; i < (int)safes.size(); ++i) {
-				for (int j = 0; j < 5; ++j) {
+				for (int j = 0; j < safes[i]->size(); ++j) {
 					Vec<Dial, 4> cn;
 					for (int k = 0; k < 4; ++k) {
 						if (j == 0) 
@@ -220,12 +221,12 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h)
 				}
 			}
 
-			if (valid) {
+			if (valid && bonus == 2) {
 				for (int i = 0; i < (int)testCNs.size() && valid; ++i) {
 					int left = 0;
 					int right = 0;
 
-					if (i % 5 == 4)
+					if (i % safes[i]->size() == safes[i]->size()-1)
 						continue;
 
 					for (int j = 0; j < 4; ++j) {
