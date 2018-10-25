@@ -158,6 +158,8 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 	vector<Vec<Dial,4>> testCNs;
 	vector<vector<int>> candidateUHFs;
 
+	testCNs.reserve(500);
+
 	//Generate the some of the hash functions
 	for (int i = 0; i < 4; ++i) {
 		combinedHF[i] =

@@ -28,6 +28,8 @@ int main() {
 	HashFunctions* h = nullptr;
 	std::vector<Safe*> safes;
 
+	safes.reserve(100);
+
 	int mode = consoleIO.selectMode();
 	
 	if (1 == mode || 3 == mode) {
