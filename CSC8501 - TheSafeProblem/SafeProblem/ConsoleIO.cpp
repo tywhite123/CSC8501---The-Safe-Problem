@@ -63,11 +63,11 @@ int ConsoleIO::inputNoOfSolutions()
 	return noOfS;
 }
 
-string ConsoleIO::inputFilePath()
+string ConsoleIO::inputFilePath(string type)
 {	
 	string filepath;
 
-	cout << "Please Enter the Filepath: ";
+	cout << "Please enter a file name for a " << type << " file: ";
 	/*getline(cin, filepath);
 */
 
@@ -117,6 +117,20 @@ int ConsoleIO::bonusValidation()
 		cin >> selected;
 
 	return selected;
+}
+
+int ConsoleIO::keyFileWithLock()
+{
+	cout << "Please enter if you want a key file: \n"
+		<< "1. Yes\n"
+		<< "2. No\n";
+
+	int amount = 0;
+
+	while (amount <= 0 || amount > 2)
+		cin >> amount;
+
+	return amount;
 }
 
 int ConsoleIO::confirmCandidateUHF(vector<vector<int>> candidateUHF)

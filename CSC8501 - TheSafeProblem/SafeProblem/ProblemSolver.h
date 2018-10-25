@@ -15,9 +15,9 @@ public:
 
 	void generateRoots(vector<Safe*>& safes, HashFunctions*& h, int rootGen, int noOfSolutions, int noOfLocks, int bonus);
 
-	void solveRoots(vector<Safe*>& safes, HashFunctions*& h);
+	void solveRoots(vector<Safe*>& safes, HashFunctions*& h, int bonus);
 
-	bool solveLocks(vector<Safe*>& safes, HashFunctions*& h, int bonus);
+	bool solveLocks(vector<Safe*>& safes, HashFunctions*& h, int bonus, int noOfLocks);
 
 	bool bonusCheck(Safe *&s);
 

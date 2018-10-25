@@ -16,10 +16,11 @@ public:
 	int selectMode();
 	int selectRandom();
 	int inputNoOfSolutions();
-	string inputFilePath();
+	string inputFilePath(string type);
 	int confirmAmount(vector<Safe*>&safes);
 	int inputNoOfLocks();
 	int bonusValidation();
+	int keyFileWithLock();
 
 	int confirmCandidateUHF(vector<vector<int>> candidateUHF);
 	void nothingFound();

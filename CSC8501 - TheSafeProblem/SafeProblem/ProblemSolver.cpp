@@ -25,6 +25,7 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 
 		validSolutions = 0;
 		
+		//Clean up last try/set up next try
 		safes.clear();
 		int iterations = 0;
 		test = new HashFunctions();
@@ -35,6 +36,7 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 
 			int a, b, c, d;
 
+			//Type of root gen is selected
 			if (1 == rootGen) {
 				a = rand() % 10;
 				b = rand() % 10;
@@ -51,7 +53,7 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 
 			Safe* s = new Safe(a, b, c, d, noOfLocks);
 
-			//MULTI LOCK SAFE
+			//MULTI LOCK SAFE Data Gen
 
 			for (int j = 0; j < s->size() && isValid; ++j) {
 				Vec<Dial, 4>* Root = s->getCurrentLock()->getLock();
@@ -59,11 +61,12 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 				Vec<Dial, 4>* LNHash = s->getCurrentLock()->getLN();
 				Vec<Dial, 4>* HNHash = s->getCurrentLock()->getHN();
 
+				//hashing plus checking valid
 				isValid = test->hashRoot(Root, CNHash, LNHash, HNHash);
 
 
 
-
+				//get next lock
 				if (j < s->size() - 1) {
 					s->nextLockRoot();
 				}
@@ -71,14 +74,17 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 
 			}
 
+			//bonus validation if selected
 			if (isValid && bonus == 2) isValid = bonusCheck(s);
 
+			//Add to vector
 			if (isValid) {
 				validSolutions++;
 				safes.push_back(s);
 
 			}
 			else {
+				//if not enough are last safe value;
 				delete s;
 				s = nullptr;
 			}
@@ -92,6 +98,7 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 		}
 		
 		
+		//Clean up of last try so it doesnt keep allocating memory
 		if (validSolutions < noOfSolutions) {
 			delete test;
 			test = nullptr;
@@ -101,6 +108,7 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 			}
 		}
 		else {
+			//set hash to the test hashes
 			h = test;
 		}
 		
@@ -113,7 +121,7 @@ void ProblemSolver::generateRoots(vector<Safe*>& safes, HashFunctions *& h, int 
 
 }
 
-void ProblemSolver::solveRoots(vector<Safe*>& safes, HashFunctions *& h)
+void ProblemSolver::solveRoots(vector<Safe*>& safes, HashFunctions *& h, int bonus)
 {
 
 	for (unsigned int i = 0; i < safes.size(); ++i) {
@@ -127,7 +135,7 @@ void ProblemSolver::solveRoots(vector<Safe*>& safes, HashFunctions *& h)
 			isValid = h->hashRoot(Root, CNHash, LNHash, HNHash);
 
 
-			
+			/*if (isValid && bonus == 2) isValid = bonusCheck(safes[i]);*/
 
 
 			if (j < 4) {
@@ -138,7 +146,7 @@ void ProblemSolver::solveRoots(vector<Safe*>& safes, HashFunctions *& h)
 
 }
 
-bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bonus)
+bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bonus, int noOfLocks)
 {
 	int combinedHF[4];
 	int uhfAndLhf[4];
@@ -146,10 +154,11 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 	int uhf[4];
 	int lhf[4];
 
+
 	vector<Vec<Dial,4>> testCNs;
 	vector<vector<int>> candidateUHFs;
 
-
+	//Generate the some of the hash functions
 	for (int i = 0; i < 4; ++i) {
 		combinedHF[i] =
 			safes[0]->getLockAt(1)->getLN()->getAt(i).getEntry() -
@@ -168,7 +177,7 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 	}
 
 
-
+	//Get all the HN values
 	for (unsigned int i = 0; i < safes.size(); ++i) {
 		for (int j = 0; j < safes[i]->size(); ++j) {
 			for (int k = 0; k < 4; ++k) {
@@ -187,7 +196,7 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 	bool finished = false;
 	while (!finished) {*/
 
-
+		//try different UHFs until you get valid ones
 		bool valid = true;
 		int t = 0;
 		while (/*valid && *//*!finished &&*/ t < 10000) {
@@ -226,7 +235,7 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 					int left = 0;
 					int right = 0;
 
-					if (i % safes[i]->size() == safes[i]->size()-1)
+					if (i % noOfLocks == noOfLocks-1)
 						continue;
 
 					for (int j = 0; j < 4; ++j) {
@@ -256,6 +265,7 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 			}
 
 			if (valid) {
+				//push back the candidate uhf
 				vector<int> uhfToEnter;
 				for (int i = 0; i < 4; ++i)
 					uhfToEnter.push_back(uhf[i]);
@@ -277,6 +287,7 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 
 		if (valid) {
 
+			//if more that one candidate uhf lis them and allow user to pick
 			if (candidateUHFs.size() > 1) {
 				int selected = io.confirmCandidateUHF(candidateUHFs);
 				for (int i = 0; i < 4; ++i)
@@ -287,7 +298,7 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 					uhf[i] = candidateUHFs[0].at(i);
 			}
 
-
+			//clear test cns and generate the correct one
 			testCNs.clear();
 			for (int i = 0; i < (int)safes.size(); ++i) {
 				for (int j = 0; j < safes[i]->size(); ++j) {
@@ -302,6 +313,7 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 				}
 			}
 
+			//insert the correct cn
 			for (int i = 0; i < (int)safes.size(); ++i) {
 				for (int j = i * safes[i]->size(); j < (i * safes[i]->size()) + safes[i]->size(); ++j) {
 					for (int k = 0; k < 4; ++k)
@@ -323,6 +335,8 @@ bool ProblemSolver::solveLocks(vector<Safe*>& safes, HashFunctions *& h, int bon
 bool ProblemSolver::bonusCheck(Safe *& s)
 {
 	bool valid = true;
+
+	//Check for left cn is less than right cn on locks
 	for (int i = 0; i < 4 && valid; ++i) {
 		int left = 0;
 		int right = 0;
@@ -339,6 +353,7 @@ bool ProblemSolver::bonusCheck(Safe *& s)
 
 	}
 
+	//check if total cn is even
 	if (valid) {
 		int total = 0;
 		for (int i = 0; i < s->size() && valid; ++i) {

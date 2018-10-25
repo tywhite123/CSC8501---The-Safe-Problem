@@ -137,6 +137,7 @@ void FileIO::readInKeyFile(string filepath, HashFunctions *& h, vector<Safe*>& s
 	//[0-9]+|[0-9 ]+ (For reading root)
 	//((\+|-)?[0-9]+, ?){3}(\+|-)?[0-9]+ (For reading hash functions)
 
+	//Allows to check if the right format is used in the data file
 	regex root("(ROOT) [0-9]+|[0-9 ]+");
 	regex hash("(UHF|LHF|PHF) ((\\+|-)?[0-9]+, ?){3}(\\+|-)?[0-9]+");
 	regex ns("(NS) ?[0-9]+");
@@ -221,7 +222,6 @@ void FileIO::readInKeyFile(string filepath, HashFunctions *& h, vector<Safe*>& s
 								hashEntered = true;
 							}
 
-							//TODO: ADD VALUES TO THE CORRECT VECTOR
 
 						}
 					}
@@ -247,11 +247,18 @@ void FileIO::readInKeyFile(string filepath, HashFunctions *& h, vector<Safe*>& s
 
 			}
 			else {
-				for (int i = 0; i < (int)safes.size(); ++i)
-					delete safes[i];
-				if (h != nullptr)
-					delete h;
-				throw exception("Not a valid file");
+				if (!hashEntered) {
+
+					//Delete all heap memory if allocated so it isnt stuck in memory
+					for (int i = 0; i < (int)safes.size(); ++i)
+						delete safes[i];
+					if (h != nullptr)
+						delete h;
+					h = nullptr;
+
+					//throw the exception
+					throw exception("Not a valid file");
+				}
 				
 			}
 
@@ -288,11 +295,6 @@ void FileIO::readInLockFile(string filepath, vector<Safe*>& safes, int size)
 					getline(split, substr, ' ');
 					if (substr != "ROOT:") {
 						int value = stoi(substr);
-
-					/*	d = value % 10;
-						c = value / 10 % 10;
-						b = value / 100 % 10;
-						a = value / 1000 % 10;*/
 
 						safeRoot[i] = value;
 						++i;

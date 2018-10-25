@@ -4,6 +4,14 @@
 #include<stdlib.h>
 #include <time.h>
 
+#define KEYDIR "..\\Files\\KeyFiles\\"
+#define MULTIDIR "..\\Files\\MultiSafeFiles\\"
+#define LOCKDIR "..\\Files\\LockFiles\\"
+
+#define KEY "Key"
+#define MULTI "Multi Safe"
+#define LOCK "LOCK"
+
 
 int main() {
 	
@@ -27,10 +35,10 @@ int main() {
 		int rootGen = consoleIO.selectRandom();
 		int locksPerSafe = consoleIO.inputNoOfLocks();
 		int bonus = consoleIO.bonusValidation();
-		string keyFilePath = consoleIO.inputFilePath();
+		string keyFilePath = consoleIO.inputFilePath(KEY);
 		string multiSafePath;
 		if (3 == mode)
-			multiSafePath = consoleIO.inputFilePath();
+			multiSafePath = consoleIO.inputFilePath(MULTI);
 
 		system("CLS");
 
@@ -48,10 +56,10 @@ int main() {
 			safes.resize(noOfS);
 		}
 		
-		io.printKeyFile(keyFilePath, h, safes);
+		io.printKeyFile(KEYDIR + keyFilePath, h, safes);
 
 		if (mode == 3) {
-			io.printMultiSafeFile(multiSafePath, safes);
+			io.printMultiSafeFile(MULTIDIR + multiSafePath, safes);
 			consoleIO.outputMultiSafeSolutions(safes);
 		}
 		else {
@@ -59,15 +67,16 @@ int main() {
 		}
 	}
 	else if (2 == mode) {
-		string keyFilePath = consoleIO.inputFilePath();
-		string multiSafePath = consoleIO.inputFilePath();
+		string keyFilePath = consoleIO.inputFilePath(KEY);
+		string multiSafePath = consoleIO.inputFilePath(MULTI);
+		int bonus = consoleIO.bonusValidation();
 
 		try {
-			io.readInKeyFile(keyFilePath, h, safes);
+			io.readInKeyFile(KEYDIR + keyFilePath, h, safes);
 			
-			solve.solveRoots(safes, h);
+			solve.solveRoots(safes, h, bonus);
 
-			io.printMultiSafeFile(multiSafePath, safes);
+			io.printMultiSafeFile(MULTIDIR + multiSafePath, safes);
 			consoleIO.outputMultiSafeSolutions(safes);
 		}
 		catch (exception& e) {
@@ -82,7 +91,11 @@ int main() {
 		int rootGen = consoleIO.selectRandom();
 		int locksPerSafe = consoleIO.inputNoOfLocks();
 		int bonus = consoleIO.bonusValidation();
-		string lockFilePath = consoleIO.inputFilePath();
+		int keyFile = consoleIO.keyFileWithLock();
+		string lockFilePath = consoleIO.inputFilePath(LOCK);
+		string keyFilePath;
+		if(keyFile == 1)
+		 keyFilePath = consoleIO.inputFilePath(KEY);
 
 
 		std::cout << "\n----------------------------------------------------------------------------\n\n";
@@ -100,27 +113,30 @@ int main() {
 
 		consoleIO.outputMultiSafeSolutions(safes);
 
-		io.printLockFile(lockFilePath, safes);
-		io.printKeyFile("keytesting.txt", h, safes);
+		io.printLockFile(LOCKDIR + lockFilePath, safes);
+		if(keyFile == 1)
+			io.printKeyFile(KEYDIR + keyFilePath, h, safes);
 
 
 	}
 	else if (5 == mode) {
-		string lockFilePath = consoleIO.inputFilePath();
+		string lockFilePath = consoleIO.inputFilePath(LOCK);
+		string keyFilePath = consoleIO.inputFilePath(KEY);
+		string multiSafePath = consoleIO.inputFilePath(MULTI);
 		int locksPerSafe = consoleIO.inputNoOfLocks();
 		int bonus = consoleIO.bonusValidation();
 
 
-		io.readInLockFile(lockFilePath, safes, locksPerSafe);
+		io.readInLockFile(LOCKDIR + lockFilePath, safes, locksPerSafe);
 
-		bool valid = solve.solveLocks(safes, h, bonus);
+		bool valid = solve.solveLocks(safes, h, bonus, locksPerSafe);
 
 
 		if (valid) {
 			consoleIO.outputLockSolution(h, safes);
 
-			io.printKeyFile("key(fromLock).txt", h, safes);
-			io.printMultiSafeFile("multi(fromLock).txt", safes);
+			io.printKeyFile(KEYDIR + keyFilePath, h, safes);
+			io.printMultiSafeFile(MULTIDIR + multiSafePath, safes);
 		}
 		else {
 			consoleIO.nothingFound();
